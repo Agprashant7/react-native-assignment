@@ -1,13 +1,5 @@
 import React from 'react';
-import {
-  SafeAreaView,
-  View,
-  StyleSheet,
-  Image,
-  Text,
-  Linking,
-  Dimensions,
-} from 'react-native';
+import {SafeAreaView} from 'react-native';
 
 import {
   DrawerContentScrollView,

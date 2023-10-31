@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
     left: 15,
     width: 6,
     height: 6,
-    borderRadius: 6/ 2,
+    borderRadius: 6 / 2,
     backgroundColor: 'red',
   },
 });

@@ -1,15 +1,13 @@
 import React from 'react';
 import {StyleSheet, View, Text} from 'react-native';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 const OptionCards = ({cardName, bgColor, icon, count, isSelected}) => {
   return (
     <View style={[styles.optionCard, {backgroundColor: bgColor}]}>
-      <View style={{marginLeft: 10, width: '10%'}}>{icon}
-      {isSelected?<View style={styles.dot}></View>:<></>
-      }
-   
+      <View style={{marginLeft: 10, width: '10%'}}>
+        {icon}
+        {isSelected ? <View style={styles.dot}></View> : <></>}
       </View>
-      
+
       <Text style={styles.cardName}>{cardName}</Text>
       {count > 0 ? (
         <View style={styles.redBox}>
@@ -49,12 +47,12 @@ const styles = StyleSheet.create({
     fontSize: 10,
     color: 'white',
   },
-  dot:{
-    position:'absolute',
-    left:15,
+  dot: {
+    position: 'absolute',
+    left: 15,
     width: 6,
     height: 6,
     borderRadius: 6 / 2,
-    backgroundColor: "red",
-  }
+    backgroundColor: 'red',
+  },
 });
