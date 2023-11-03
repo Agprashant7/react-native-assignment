@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import {COLORS} from '../../utils/theme';
 const Accordion = ({accordionName, icon, children, isSelected}) => {
   const [isActive, setIsActive] = useState(false);
   return (
@@ -21,6 +22,7 @@ const Accordion = ({accordionName, icon, children, isSelected}) => {
           <Icon
             name={isActive ? 'keyboard-arrow-up' : 'keyboard-arrow-down'}
             size={20}
+            color={COLORS.fontColor}
           />
         </View>
       </TouchableOpacity>
@@ -38,7 +40,7 @@ const styles = StyleSheet.create({
   },
   accordionName: {
     width: '70%',
-    color: '#3d3d3d',
+    color: COLORS.fontColor,
     fontWeight: '400',
     paddingLeft: 8,
   },
@@ -51,6 +53,6 @@ const styles = StyleSheet.create({
     width: 6,
     height: 6,
     borderRadius: 6 / 2,
-    backgroundColor: 'red',
+    backgroundColor: COLORS.highLighter,
   },
 });

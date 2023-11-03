@@ -1,5 +1,6 @@
 import React from 'react';
 import {StyleSheet, View, Text} from 'react-native';
+import {COLORS} from '../../utils/theme';
 const OptionCards = ({cardName, bgColor, icon, count, isSelected}) => {
   return (
     <View style={[styles.optionCard, {backgroundColor: bgColor}]}>
@@ -31,7 +32,7 @@ const styles = StyleSheet.create({
   },
   cardName: {
     width: '70%',
-    color: '#3d3d3d',
+    color: COLORS.fontColor,
     fontWeight: '400',
     paddingLeft: 7,
   },

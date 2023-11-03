@@ -1,46 +1,57 @@
 import React from 'react';
 import {SafeAreaView} from 'react-native';
 
-import {
-  DrawerContentScrollView,
-  DrawerItemList,
-  DrawerItem,
-} from '@react-navigation/drawer';
+import {DrawerContentScrollView} from '@react-navigation/drawer';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Accordion from '../accordion';
 import OptionCards from '../optionCards';
 import Avatar from '../avatar';
+import {COLORS} from '../../utils/theme';
 const CustomSidebarMenu = props => {
   const sampleData = [
     {
       cardName: 'Prospects',
       count: 0,
-      icon: <FontAwesome5 name={'id-card'} size={20} color={'#3d3d3d'} />,
+      icon: (
+        <FontAwesome5 name={'id-card'} size={20} color={COLORS.fontColor} />
+      ),
     },
     {
       cardName: 'Residents',
       count: 0,
-      icon: <FontAwesome5 name={'user-friends'} size={20} color={'#3d3d3d'} />,
+      icon: (
+        <FontAwesome5
+          name={'user-friends'}
+          size={20}
+          color={COLORS.fontColor}
+        />
+      ),
     },
     {
       cardName: 'Calendar',
       count: 0,
-      icon: <FontAwesome5 name={'calendar-alt'} size={20} color={'#3d3d3d'} />,
+      icon: (
+        <FontAwesome5
+          name={'calendar-alt'}
+          size={20}
+          color={COLORS.fontColor}
+        />
+      ),
     },
     {
       cardName: 'Availability',
       count: 0,
-      icon: <FontAwesome5 name={'city'} size={20} color={'#3d3d3d'} />,
+      icon: <FontAwesome5 name={'city'} size={20} color={COLORS.fontColor} />,
     },
     {
       cardName: 'Leasing Binder',
       count: 0,
-      icon: <FontAwesome5 name={'fax'} size={20} color={'#3d3d3d'} />,
+      icon: <FontAwesome5 name={'fax'} size={20} color={COLORS.fontColor} />,
     },
     {
       cardName: 'Search',
       count: 0,
-      icon: <FontAwesome5 name={'search'} size={20} color={'#3d3d3d'} />,
+      icon: <FontAwesome5 name={'search'} size={20} color={COLORS.fontColor} />,
     },
   ];
   const sampleData2 = [
@@ -81,25 +92,31 @@ const CustomSidebarMenu = props => {
     },
   ];
   return (
-    <SafeAreaView style={{flex: 1}}>
+    <SafeAreaView style={{flex: 1, backgroundColor: COLORS.primary}}>
       <DrawerContentScrollView {...props}>
         {/* <DrawerItemList {...props} /> */}
         <OptionCards
           cardName={'To do List'}
-          bgColor={'#e8e9ff'}
+          // bgColor={'#e8e9ff'}
           count={12}
           isSelected={true}
           icon={
             <FontAwesome5
               name={'list-alt'}
-              style={{color: '#6168f2'}}
+              style={{color: COLORS.secondary}}
               size={20}
             />
           }
         />
         <Accordion
           isSelected={true}
-          icon={<FontAwesome5 name={'envelope'} size={20} color={'#3d3d3d'} />}
+          icon={
+            <FontAwesome5
+              name={'envelope'}
+              size={20}
+              color={COLORS.fontColor}
+            />
+          }
           accordionName={'InBox'}>
           {sampleData2.map((profile, i) => {
             return (
