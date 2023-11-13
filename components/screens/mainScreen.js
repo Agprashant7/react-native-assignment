@@ -3,7 +3,7 @@ import {View, Button, Text, StyleSheet} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {ProductScreen} from './productScreen';
 import {AccountScreen} from './accountScreen';
-import {DashboardScreen} from './dashboardScreen';
+import {HomeScreen} from './homeScreen';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {COLORS} from '../../utils/theme';
 
@@ -41,7 +41,7 @@ export function MainScreen() {
           height: 60,
         },
       })}>
-      <Tab.Screen name="Dashboard" component={DashboardScreen} />
+      <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Product" component={ProductScreen} />
       <Tab.Screen name="Account" component={AccountScreen} />
       <Tab.Screen name="Settings" component={AccountScreen} />
