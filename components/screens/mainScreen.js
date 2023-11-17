@@ -6,7 +6,9 @@ import {AccountScreen} from './accountScreen';
 import {HomeScreen} from './homeScreen';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {COLORS} from '../../utils/theme';
-
+import { createStackNavigator } from '@react-navigation/stack';
+import CartScreen from './cartScreen';
+const Stack = createStackNavigator();
 export function MainScreen() {
   const Tab = createBottomTabNavigator();
 
@@ -17,12 +19,12 @@ export function MainScreen() {
           let iconName = 'dice-d6';
 
           if (route.name === 'Home') {
-          } else if (route.name === 'Product') {
+          } else if (route.name === 'Cart') {
             iconName = 'shopping-cart';
+          } else if (route.name === 'Wishlist') {
+            iconName = 'heart';
           } else if (route.name === 'Account') {
-            iconName = 'user';
-          } else if (route.name === 'Settings') {
-            iconName = 'wrench';
+            iconName = 'user-alt';
           }
 
           return (
@@ -42,9 +44,9 @@ export function MainScreen() {
         },
       })}>
       <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Product" component={ProductScreen} />
-      <Tab.Screen name="Account" component={AccountScreen} />
-      <Tab.Screen name="Settings" component={AccountScreen} />
+      <Tab.Screen name="Cart" component={CartScreen} />
+      <Tab.Screen name="Wishlist" component={AccountScreen} />
+      <Tab.Screen   name="Account" component={AccountScreen} />
     </Tab.Navigator>
   );
 }

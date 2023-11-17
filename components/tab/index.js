@@ -2,11 +2,10 @@ import React from 'react';
 import {Tab, Text, Card, Button, Icon, TabView} from '@rneui/themed';
 import {COLORS} from '../../utils/theme';
 import {StyleSheet, View} from 'react-native';
-import {Image} from '@rneui/base';
-import {CardImage} from '@rneui/base/dist/Card/Card.Image';
 import {ScrollView} from 'react-native';
+import ItemCard from '../itemCard';
 
-const Tabs = ({value, onChange, tabHead, tabData}) => {
+const Tabs = ({value, onChange, tabHead, tabData,onClick}) => {
   const icon = value => {
     if (value == 'Women') {
       return 'woman';
@@ -16,7 +15,6 @@ const Tabs = ({value, onChange, tabHead, tabData}) => {
       return 'tag-faces';
     }
   };
-  console.log(tabData);
   return (
     <>
       <Tab
@@ -44,37 +42,28 @@ const Tabs = ({value, onChange, tabHead, tabData}) => {
           );
         })}
       </Tab>
-
-      {/* <Text>{tabData}</Text> */}
-
-      {/* </TabView> */}
       {
-        <ScrollView>
+        <ScrollView style={{backgroundColor: COLORS.primary}}>
           <View style={styles.container}>
             {tabData.map((data, i) => {
+              
               return (
                 i < 4 && (
-                  <Card key={i} containerStyle={styles.card}>
-                    <View>
-                      <CardImage
-                        style={styles.card}
-                        // resizeMode="contain"
-                        resizeMode="stretch"
-                        source={{
-                          uri: data.image[0],
-                        }}
-                      />
-                      <Card.Title>{data.name}</Card.Title>
-
-                      <Text style={{textAlign: 'center'}}>{data.price}</Text>
-                    </View>
-                  </Card>
+                  <ItemCard
+                    key={i}
+                    onClick={()=>onClick(data.id)}
+                    cardName={data.name}
+                    image={data.image[0]}
+                    cardPrice={data.price}
+                  />
                 )
               );
             })}
-            <View>
-              <Text>See more</Text>
-            </View>
+            {tabData.length > 4 && (
+              <View>
+                <Text  style={{textDecorationLine:'underline'}}>See more</Text>
+              </View>
+            )}
           </View>
         </ScrollView>
       }
@@ -90,12 +79,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
+    backgroundColor: COLORS.backgroundColor,
   },
-  card: {
-    width: 150,
-    padding: 0,
-    paddingBottom: 2,
-    borderRadius: 8,
-  },
-  cardImage: {width: '100%', height: 200, marginBottom: 4},
 });
