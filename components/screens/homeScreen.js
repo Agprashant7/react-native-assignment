@@ -26,7 +26,7 @@ export function HomeScreen({navigation}) {
   };
   return (
     <ScrollView
-      style={{backgroundColor: COLORS.backgroundColor, paddingHorizontal: 10}}>
+      style={styles.containerStyle}>
       <View>
         <Image
           containerStyle={styles.item}
@@ -80,6 +80,7 @@ export function HomeScreen({navigation}) {
   );
 }
 const styles = StyleSheet.create({
+  containerStyle:{backgroundColor: COLORS.backgroundColor, paddingHorizontal: 10},
   list: {
     width: '100%',
     backgroundColor: '#000',

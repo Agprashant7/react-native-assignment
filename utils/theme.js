@@ -13,7 +13,7 @@ if(type==='outline'){
 return{color:COLORS.secondary,bgColor:COLORS.primary,fontSize:18}
 }
 else if(type==='clear'){
-  return{color:COLORS.secondary,bgColor:COLORS.primary,fontSize:12}
+  return{color:COLORS.secondary,bgColor:'transparent',fontSize:12}
 }
 else{
 return {color:COLORS.fontColor,bgColor:COLORS.secondary,fontSize:18}

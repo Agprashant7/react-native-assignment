@@ -13,8 +13,9 @@ import {COLORS} from '../../utils/theme';
 import {get, remove, set} from '../../utils/localStorage';
 import GetProductDetailById from '../../utils/getProductDetailById';
 import {discountedPrice} from './productScreen';
+import Placeholder from '../placeholder';
 
-const CartScreen = () => {
+const CartScreen = ({route,navigation}) => {
   const asyncFun = async () => {
     const cartLs = await get('cartItem');
     let wishLs = await get('wishlist');
@@ -24,8 +25,8 @@ const CartScreen = () => {
   };
   useEffect(() => {
     asyncFun();
-    remove('cartItem')
-  }, []);
+    // remove('cartItem')
+  }, [cartItem]);
   const [cartItem, setCartItem] = useState([]) || [];
   const [wishlist, SetWishlist] = useState([]) || [];
   const [amountDetails, setAmountDetails] = useState({
@@ -52,15 +53,15 @@ const CartScreen = () => {
   },
   0);
   let gst = (totalMrp * 5) / 100;
-  let amountToPay = totalMrp - totalDiscount + gst;;
+  let amountToPay = totalMrp - totalDiscount + gst;
+  set("total", amountToPay);
   const moveToWishlist = async (id, size) => {
-    console.log('INDISE MOVE TO WISH FUN');
     let wishlistItem = {id: id, size: size};
     let checkIfItemExist = wishlist.filter((res, i) => res.id == id);
-    // if (checkIfItemExist) {
-    //   removeFromCart(id, size);
-    //   return;
-    // }
+    if (checkIfItemExist) {
+      removeFromCart(id, size);
+      return;
+    }
 
     wishlist.push(wishlistItem);
     console.log('WISHLIST', wishlist);
@@ -70,25 +71,22 @@ const CartScreen = () => {
     removeFromCart(id, size);
   };
   const removeFromCart = async (id, size) => {
-    // console.log(id, s);
-    // const filterCart = cartItem.filter(
-    //   (res, i) => (res.id == id) & (res.size !== size),
-    // );
-    // setCartItem(filterCart);
-    console.log('********INSIDE REMOVE', cart);
-    return;
+    let concat = `${id}${size}`;
+    const filterCart = cartItem.filter((res, i) => res.id + res.size != concat);
+    setCartItem(filterCart);
+
     await set('cartItem', filterCart);
   };
-  return cartItem ? (
+  return cartItem.length > 0 ? (
     <ScrollView style={styles.container}>
       {cartItem?.map((cart, i) => {
-        console.log('cart', cart);
         let cartId = cart.id;
         let idSize = cart.size;
         return (
           <View key={i} style={styles.item}>
             <View>
               <Image
+                onPress={e => navigation.navigate('Product', {id: cart.id})}
                 containerStyle={styles.image}
                 resizeMode="stretch"
                 source={{
@@ -105,7 +103,7 @@ const CartScreen = () => {
                 <Text style={{textDecorationLine: 'line-through'}}>
                   {GetProductDetailById(cart.id).mrp}
                 </Text>
-                <Text>
+                <Text style={{color: COLORS.highLighter}}>
                   {' '}
                   {`${discountedPrice(
                     GetProductDetailById(cart.id).mrp,
@@ -122,7 +120,7 @@ const CartScreen = () => {
                 style={{display: 'flex', flexDirection: 'row', marginLeft: -5}}>
                 <Button
                   type="clear"
-                  onPress={() => removeFromCart(cart.id, cart.size)}
+                  onPress={() => removeFromCart(cartId, idSize)}
                   title={'remove'}
                 />
                 <Button
@@ -150,14 +148,11 @@ const CartScreen = () => {
         </View>
       </View>
       <View>
-        <Button title={'Check out'} />
+        <Button onPress={()=>navigation.navigate('Checkout')} title={'Check out'} />
       </View>
     </ScrollView>
   ) : (
-    <View style={{flex:1,alignItems:'center',backgroundColor:COLORS.primary}}>
-        <Text h4>No Items</Text>
-        </View>
-
+    <Placeholder/>
   );
 };
 export default CartScreen;

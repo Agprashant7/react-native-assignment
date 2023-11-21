@@ -21,6 +21,7 @@ const ItemCard = ({image, cardName, cardPrice, onClick, size}) => {
           <Card.Title style={{color: COLORS.fontColor}}>{cardName}</Card.Title>
 
           <Text style={{textAlign: 'center'}}> &#8377;{cardPrice}</Text>
+          {size&&<Text style={{textAlign: 'center',marginTop:8}}> Size:{size}</Text>}
         </View>
       </Card>
     </TouchableOpacity>

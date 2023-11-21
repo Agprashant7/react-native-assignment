@@ -3,14 +3,21 @@ import {StyleSheet, Text, View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {COLORS} from '../../utils/theme';
-const Accordion = ({accordionName, icon, children, isSelected}) => {
-  const [isActive, setIsActive] = useState(false);
+const Accordion = ({accordionName, icon, children, isSelected, onChange,isOpen=false}) => {
+  
+  const [isActive, setIsActive] = useState(isOpen);
   return (
     <View>
       <TouchableOpacity
-        onPress={() => {
-          setIsActive(!isActive);
-        }}
+        onPress={
+          !onChange
+            ? () => {
+                setIsActive(!isActive);
+              }
+            : ()=>{onChange
+            setIsActive(!isActive)
+            }
+        }
         style={styles.accordion}>
         <View style={{marginLeft: 10, width: '10%'}}>
           {icon}
@@ -26,7 +33,7 @@ const Accordion = ({accordionName, icon, children, isSelected}) => {
           />
         </View>
       </TouchableOpacity>
-      {isActive && <View style={styles.child}>{children}</View>}
+      {isActive&& <View style={styles.child}>{children}</View>}
     </View>
   );
 };
@@ -37,6 +44,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-start',
     padding: 10,
+    backgroundColor: COLORS.primary,
   },
   accordionName: {
     width: '70%',

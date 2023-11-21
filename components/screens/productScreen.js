@@ -1,6 +1,6 @@
-import {View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {COLORS} from '../../utils/theme';
-import {Image, Text, Chip, Tile} from '@rneui/base';
+import {Image, Text, Chip, Tile} from '@rneui/themed';
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 import SelectDropdown from 'react-native-select-dropdown';
 import React, {useContext, useEffect, useState} from 'react';
@@ -103,7 +103,7 @@ export function ProductScreen({route, navigation}) {
   };
   return getProductDetail ? (
     <ScrollView
-      style={{backgroundColor: COLORS.backgroundColor, paddingHorizontal: 20}}>
+      style={styles.containerStyle}>
       <View style={{flex: 2}}>
         <View style={{flex: 3}}>
           <Image
@@ -114,14 +114,7 @@ export function ProductScreen({route, navigation}) {
             }}
           />
           <View
-            style={{
-              marginTop: 20,
-              display: 'flex',
-              flexDirection: 'row',
-              gap: 12,
-              flexWrap: 'wrap',
-              justifyContent: 'center',
-            }}>
+            style={styles.flexContainer}>
             {getProductDetail.image.map((img, i) => {
               return (
                 <Image
@@ -138,14 +131,14 @@ export function ProductScreen({route, navigation}) {
           </View>
         </View>
         <View style={{marginTop: 20}}>
-          <Text h3 style={{color: COLORS.fontColor}}>
+          <Text h3>
             {getProductDetail.name}
           </Text>
-          <Text style={{color: COLORS.fontColor}}>
+          <Text >
             {getProductDetail.description}
           </Text>
-          <View style={{flexDirection: 'row', marginTop: 5, marginBottom: 5}}>
-            <Text h4 style={{color: COLORS.fontColor}}>
+          <View style={styles.priceContainer}>
+            <Text h4 >
               &#8377;{getProductDetail.price}{' '}
               <Text style={{textDecorationLine: 'line-through', fontSize: 14}}>
                 {' '}
@@ -162,15 +155,9 @@ export function ProductScreen({route, navigation}) {
             </Text>
           </View>
           <View style={{flex: 1}}>
-            <Text style={{color: COLORS.fontColor}}>Select Size</Text>
+            <Text >Select Size</Text>
             <View
-              style={{
-                flexDirection: 'row',
-                gap: 4,
-                width: '50%',
-                marginBottom: 10,
-                marginTop: 10,
-              }}>
+              style={styles.chipContainer}>
               {getProductDetail.sizes.map((size, i) => {
                 return (
                   <Chip
@@ -202,14 +189,7 @@ export function ProductScreen({route, navigation}) {
                     />
                   );
                 }}
-                buttonStyle={{
-                  marginTop: 5,
-                  width: '18%',
-                  height: 50,
-                  backgroundColor: COLORS.primary,
-                  borderColor: '#000',
-                  borderWidth: 0.5,
-                }}
+                buttonStyle={styles.buttonStyle}
                 dropdownStyle={{width: '20%'}}
                 data={quantity}
               />
@@ -277,27 +257,27 @@ export function ProductScreen({route, navigation}) {
                           : itemSchema.size,
                       )
                   ) : (
-                    <></>
+                   ()=> navigation.navigate('Wishlist')
                   )
                 }
                 title={wishlistButton ? "Wishlisted" : "Add to wishlist"}
               />
             </View>
             <View style={{marginTop: 20}}>
-              <Text h4 style={{color: COLORS.fontColor}}>
+              <Text h4 >
                 Product Details
               </Text>
-              <Text style={{color: COLORS.fontColor}}>
+              <Text >
                 Material Care: 98% Cotton 2% Spandex Machine Wash
               </Text>
-              <Text style={{color: COLORS.fontColor}}>
+              <Text >
                 Manufactured & Sold By:
               </Text>
-              <Text style={{color: COLORS.fontColor}}>
+              <Text >
                 The Demo Store Pvt Ltd 07,ABCD Road Bengaluru-560073
                 demostore@gmail.com
               </Text>
-              <Text style={{color: COLORS.fontColor}}>
+              <Text >
                 {' '}
                 Country Origin:India
               </Text>
@@ -310,3 +290,33 @@ export function ProductScreen({route, navigation}) {
     <></>
   );
 }
+
+const styles = StyleSheet.create({
+  containerStyle:{backgroundColor: COLORS.backgroundColor, paddingHorizontal: 20},
+  flexContainer:{
+    marginTop: 20,
+    display: 'flex',
+    flexDirection: 'row',
+    gap: 12,
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+  },
+  priceContainer:{flexDirection: 'row', marginTop: 5, marginBottom: 5},
+  chipContainer:{
+    flexDirection: 'row',
+    gap: 4,
+    width: '50%',
+    marginBottom: 10,
+    marginTop: 10,
+  },
+  buttonStyle:{
+    marginTop: 5,
+    width: '18%',
+    height: 50,
+    backgroundColor: COLORS.primary,
+    borderColor: '#000',
+    borderWidth: 0.5,
+  },
+
+});
+

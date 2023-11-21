@@ -9,6 +9,7 @@ import {COLORS, theme} from './utils/theme';
 import {ProductsDetails} from './utils/sampleData';
 import {ThemeProvider} from '@rneui/themed';
 import { ProductScreen } from './components/screens/productScreen';
+import CheckoutScreen from './components/screens/checkoutScreen';
 export const ProductsDetailsContext = createContext();
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
@@ -39,10 +40,11 @@ export default function App() {
         <Stack.Navigator
           screenOptions={{
             headerShown: false,
-            cardStyle: {backgroundColor: 'red'},
+          
           }}>
           <Stack.Screen name="AppDrawerStack" component={AppDrawerStack} />
           <Stack.Screen  name="Product" component={ProductScreen} />
+          <Stack.Screen  name="Checkout" component={CheckoutScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </ThemeProvider>
