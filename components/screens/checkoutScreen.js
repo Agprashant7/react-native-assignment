@@ -1,4 +1,4 @@
-import {Button, CheckBox, Text} from '@rneui/themed';
+import {Button, CheckBox, Text, Overlay} from '@rneui/themed';
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
@@ -6,10 +6,10 @@ import {COLORS} from '../../utils/theme';
 import Accordion from '../accordion';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {Image} from '@rneui/base';
-import {get} from '../../utils/localStorage';
+import {get, remove} from '../../utils/localStorage';
 import GetProductDetailById from '../../utils/getProductDetailById';
 import CheckoutForm from '../form';
-const CheckoutScreen = () => {
+const CheckoutScreen = ({route,navigation}) => {
   const asyncFun = async () => {
     const cartLs = await get('cartItem');
     const total = await get('total');
@@ -24,11 +24,19 @@ const CheckoutScreen = () => {
   const [totalAmt, setTotalAmt] = useState(0);
   const [expanded, setExpanded] = useState(true);
   const [address, setAddress] = useState();
-  const [selectedIndex, setIndex] = React.useState(0);
+  const [selectedIndex, setIndex] = useState(0);
+  const [showModal, setShowModal] = useState(false);
   const handleSubmit = values => {
-    console.log(values);
     setAddress(values);
     setExpanded(!expanded);
+  };
+  const placeOrder = () => {
+    setShowModal(false);
+    remove('cartItem');
+    remove('wishlisht');
+    remove('total');
+    navigation.navigate('Home')
+    
   };
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -118,6 +126,7 @@ const CheckoutScreen = () => {
         </View>
         <View style={{marginBottom: 10}}>
           <Accordion
+            isOpen={!expanded}
             icon={
               <FontAwesome5
                 name={'address-card'}
@@ -151,11 +160,23 @@ const CheckoutScreen = () => {
         </View>
       </View>
       <Button
-        onPress={() => setExpanded(false)}
+        onPress={() => setShowModal(true)}
         type={address == undefined ? 'outline' : 'solid'}
-        // disabled={address == undefined}
+        disabled={expanded}
         title={'place order'}
       />
+      <Overlay isVisible={showModal} onBackdropPress={placeOrder}>
+        <Text h4 style={{color:COLORS.secondary}}>Congrats,{address?.firstName}</Text>
+        <View style={{marginTop:10}}>
+        <Text
+         style={{color: COLORS.secondary, fontSize: 14}}>
+          {' '}
+          Your order has been successfully placed, for more updates keep
+          checking {address?.email}
+        </Text>
+        </View>
+       
+      </Overlay>
     </ScrollView>
   );
 };
@@ -164,9 +185,7 @@ export default CheckoutScreen;
 
 const styles = StyleSheet.create({
   container: {
-    // flex: 6,
     backgroundColor: COLORS.backgroundColor,
-    //justifyContent: 'center',
     alignItems: 'center',
     height: '100%',
   },
@@ -200,7 +219,6 @@ const styles = StyleSheet.create({
     width: '30%',
     height: 100,
     marginBottom: 20,
-    //flex: 2,
   },
   cartDetails: {
     marginLeft: 20,
@@ -208,5 +226,6 @@ const styles = StyleSheet.create({
   totalAmt: {
     flexDirection: 'row',
     justifyContent: 'space-around',
+    paddingBottom:10
   },
 });

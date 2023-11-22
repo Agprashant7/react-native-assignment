@@ -1,144 +1,125 @@
 import React from 'react';
-import {SafeAreaView} from 'react-native';
-
+import {SafeAreaView, TouchableOpacity} from 'react-native';
 import {DrawerContentScrollView} from '@react-navigation/drawer';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import Accordion from '../accordion';
 import OptionCards from '../optionCards';
 import Avatar from '../avatar';
 import {COLORS} from '../../utils/theme';
-const CustomSidebarMenu = props => {
+const CustomSidebarMenu = ({props, navigation}) => {
   const sampleData = [
     {
-      cardName: 'Prospects',
-      count: 0,
-      icon: (
-        <FontAwesome5 name={'id-card'} size={20} color={COLORS.fontColor} />
-      ),
+      cardName: 'Men',
+      icon: <Ionicons name={'man'} size={20} color={COLORS.fontColor} />,
     },
     {
-      cardName: 'Residents',
-      count: 0,
-      icon: (
-        <FontAwesome5
-          name={'user-friends'}
-          size={20}
-          color={COLORS.fontColor}
-        />
-      ),
+      cardName: 'Women',
+      icon: <Ionicons name={'woman'} size={20} color={COLORS.fontColor} />,
     },
     {
-      cardName: 'Calendar',
-      count: 0,
-      icon: (
-        <FontAwesome5
-          name={'calendar-alt'}
-          size={20}
-          color={COLORS.fontColor}
-        />
-      ),
+      cardName: 'Kids',
+      icon: <Ionicons name="walk" size={26} color={COLORS.fontColor} />,
     },
-    {
-      cardName: 'Availability',
-      count: 0,
-      icon: <FontAwesome5 name={'city'} size={20} color={COLORS.fontColor} />,
-    },
-    {
-      cardName: 'Leasing Binder',
-      count: 0,
-      icon: <FontAwesome5 name={'fax'} size={20} color={COLORS.fontColor} />,
-    },
-    {
-      cardName: 'Search',
-      count: 0,
-      icon: <FontAwesome5 name={'search'} size={20} color={COLORS.fontColor} />,
-    },
+    ,
   ];
   const sampleData2 = [
     {
-      profileLink:
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRf7hFU10MvjcmHDAiACQDiQJEjCyPfFFs5zA&usqp=CAU',
-      profileName: 'Me',
-      counts: 2,
+      leftIcon: <Ionicons name="shirt" size={22} color={COLORS.fontColor} />,
+      name: 'Top wear',
     },
     {
-      profileLink:
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRf7hFU10MvjcmHDAiACQDiQJEjCyPfFFs5zA&usqp=CAU',
-      profileName: 'Ed',
-      counts: 4,
+      leftIcon: (
+        <Ionicons name="arrow-down-circle" size={22} color={COLORS.fontColor} />
+      ),
+      name: 'Bottom Wear',
     },
     {
-      profileLink:
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGB4L9NaV1EMUGwRwg4y7pEVnyzjuSykDKIg&usqp=CAU',
-      profileName: 'Abila',
-      counts: 12,
+      leftIcon: (
+        <Ionicons name="footsteps" size={22} color={COLORS.fontColor} />
+      ),
+      name: 'Shoes',
     },
     {
-      profileLink:
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRf7hFU10MvjcmHDAiACQDiQJEjCyPfFFs5zA&usqp=CAU',
-      profileName: 'Young',
-      counts: 2,
-    },
-    {
-      profileLink:
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRmyCqy4cIe7GHLI0d3sSd6UkNi40hlv2u_1w&usqp=CAU',
-      profileName: 'House',
-      counts: 122,
-    },
-    {
-      profileLink:
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGB4L9NaV1EMUGwRwg4y7pEVnyzjuSykDKIg&usqp=CAU',
-      profileName: 'Casey',
+      leftIcon: (
+        <Ionicons name="albums-sharp" size={22} color={COLORS.fontColor} />
+      ),
+      name: 'Accessories',
     },
   ];
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: COLORS.primary}}>
       <DrawerContentScrollView {...props}>
         {/* <DrawerItemList {...props} /> */}
-        <OptionCards
-          cardName={'To do List'}
-          // bgColor={'#e8e9ff'}
-          count={12}
-          isSelected={true}
-          icon={
-            <FontAwesome5
-              name={'list-alt'}
-              style={{color: COLORS.secondary}}
-              size={20}
-            />
-          }
-        />
+        <TouchableOpacity onPress={() => navigation.navigate('Home')}>
+          <OptionCards
+            cardName={'Home'}
+            // bgColor={'#e8e9ff'}
+            // count={12}
+            // isSelected={true}
+            icon={
+              <Ionicons
+                name={'home'}
+                style={{color: COLORS.secondary}}
+                size={20}
+              />
+            }
+          />
+        </TouchableOpacity>
+
         <Accordion
-          isSelected={true}
+          //  isSelected={true}
           icon={
-            <FontAwesome5
-              name={'envelope'}
-              size={20}
-              color={COLORS.fontColor}
-            />
+            <Ionicons name={'barcode'} size={20} color={COLORS.fontColor} />
           }
-          accordionName={'InBox'}>
+          accordionName={'Categories'}>
           {sampleData2.map((profile, i) => {
             return (
-              <OptionCards
+              <TouchableOpacity
                 key={i}
-                cardName={profile.profileName}
-                count={profile.counts}
-                icon={<Avatar profileLink={profile.profileLink} />}
-              />
+                onPress={() =>
+                  navigation.navigate('Section', {
+                    name: profile.name.replace(/\s/g, '').toLowerCase(),
+                  })
+                }>
+                <OptionCards
+                  fontSize={12}
+                  cardName={profile.name}
+                  count={profile.counts}
+                  icon={profile.leftIcon}
+                />
+              </TouchableOpacity>
             );
           })}
         </Accordion>
         {sampleData.map((item, i) => {
           return (
-            <OptionCards
+            <TouchableOpacity
               key={i}
-              cardName={item.cardName}
-              count={item.count}
-              icon={item.icon}
-            />
+              onPress={() =>
+                navigation.navigate('Section', {
+                  name: item.cardName.toLowerCase(),
+                })
+              }>
+              <OptionCards
+                cardName={item.cardName}
+                count={item.count}
+                icon={item.icon}
+              />
+            </TouchableOpacity>
           );
         })}
+        <TouchableOpacity onPress={()=>navigation.navigate('Cart')}>
+          <OptionCards
+            cardName={'Cart'}
+            icon={<Ionicons name="cart-sharp" size={26} color={COLORS.fontColor} />}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={()=>navigation.navigate('Wishlist')}>
+          <OptionCards
+            cardName={'Wishlist'}
+            icon={<Ionicons name="heart" size={26} color={COLORS.fontColor} />}
+          />
+        </TouchableOpacity>
       </DrawerContentScrollView>
     </SafeAreaView>
   );

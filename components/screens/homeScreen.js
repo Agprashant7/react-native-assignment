@@ -34,6 +34,7 @@ export function HomeScreen({navigation}) {
           source={{
             uri: 'https://prod-img.thesouledstore.com/public/theSoul/storage/mobile-cms-media-prod/banner-images/web_1_z75KGkf.jpg?format=webp&w=1500&dpr=1.0',
           }}
+          onPress={()=>navigation.navigate('Section',{name:'Latest'})}
         />
       </View>
 
@@ -42,6 +43,7 @@ export function HomeScreen({navigation}) {
           onClick={e =>
             navigation.navigate('Product', {id: e})
           }
+          onClickMore={(e)=>navigation.navigate('Section',{name:e})}
           value={index}
           onChange={e => setIndex(e)}
           tabHead={tabHead}
@@ -56,12 +58,14 @@ export function HomeScreen({navigation}) {
           <Image
             resizeMode="stretch"
             containerStyle={styles.item}
+            onPress={()=>navigation.navigate('Section',{name:'Latest'})}
             source={{
               uri: 'https://prod-img.thesouledstore.com/public/theSoul/storage/mobile-cms-media-prod/product-images/Collection-tile_EHW23s8.jpg?format=webp&w=480&dpr=1.0',
             }}
           />
           <Image
             resizeMode="stretch"
+            onPress={()=>navigation.navigate('Section',{name:'Latest'})}
             containerStyle={styles.item}
             source={{
               uri: 'https://prod-img.thesouledstore.com/public/theSoul/storage/mobile-cms-media-prod/product-images/jeans_Y0zDI8p.jpg?format=webp&w=480&dpr=1.0',
@@ -69,6 +73,7 @@ export function HomeScreen({navigation}) {
           />
           <Image
             resizeMode="stretch"
+            onPress={()=>navigation.navigate('Section',{name:'Latest'})}
             containerStyle={styles.item}
             source={{
               uri: 'https://prod-img.thesouledstore.com/public/theSoul/storage/mobile-cms-media-prod/product-images/Collection_Tile_OS_POLOs_copy_FcA6U8H.jpg?format=webp&w=480&dpr=1.0',

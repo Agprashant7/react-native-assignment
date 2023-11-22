@@ -36,7 +36,6 @@ const WishlistScreen = ({route, navigation}) => {
 
   const removeFromWishlist = async id => {
     let wishlistLs = wishlist.filter((item, i) => item.id !== id);
-    console.log(wishlistLs);
 
     SetWishlist(wishlistLs);
 
@@ -45,30 +44,24 @@ const WishlistScreen = ({route, navigation}) => {
   const checkItemInCart = async id => {
     let cartLocalStorage = (await get('cartItem')) || [];
     let item = cartLocalStorage.filter((res, i) => res.id == id);
-     console.log(item);
     if (item.length > 0) {
       return true;
     }
     return false;
   };
-  return wishlist.length > 0 ? (
-    <ScrollView
-      contentContainerStyle={styles.containerStyle}>
+  return wishlist?.length > 0 ? (
+    <ScrollView contentContainerStyle={styles.containerStyle}>
       {wishlist.map((item, i) => {
         return (
-          <View  key={i}>
+          <View key={i}>
             <ItemCard
-               onClick={e =>
-                navigation.navigate('Product', {id: item.id})
-              }
-             
+              onClick={e => navigation.navigate('Product', {id: item.id})}
               cardPrice={GetProductDetailById(item.id).price}
               cardName={GetProductDetailById(item.id).name}
               image={GetProductDetailById(item.id).image[0]}
               size={item.size}
             />
             <Button
-            
               onPress={() => removeFromWishlist(item.id)}
               type="clear"
               title={'Remove'}
@@ -86,20 +79,18 @@ const WishlistScreen = ({route, navigation}) => {
       })}
     </ScrollView>
   ) : (
-   <Placeholder/>
+    <Placeholder />
   );
 };
 
 export default WishlistScreen;
 
-
 const styles = StyleSheet.create({
-  containerStyle:{
+  containerStyle: {
     flex: 1,
     backgroundColor: COLORS.backgroundColor,
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
   },
-
 });

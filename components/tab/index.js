@@ -1,11 +1,11 @@
 import React from 'react';
 import {Tab, Text, Card, Button, Icon, TabView} from '@rneui/themed';
 import {COLORS} from '../../utils/theme';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {ScrollView} from 'react-native';
 import ItemCard from '../itemCard';
 
-const Tabs = ({value, onChange, tabHead, tabData,onClick}) => {
+const Tabs = ({value, onChange, tabHead, tabData,onClick,onClickMore}) => {
   const icon = value => {
     if (value == 'Women') {
       return 'woman';
@@ -60,9 +60,9 @@ const Tabs = ({value, onChange, tabHead, tabData,onClick}) => {
               );
             })}
             {tabData.length > 4 && (
-              <View>
+              <TouchableOpacity onPress={()=>onClickMore(tabData[0].section)}>
                 <Text  style={{textDecorationLine:'underline'}}>See more</Text>
-              </View>
+              </TouchableOpacity>
             )}
           </View>
         </ScrollView>

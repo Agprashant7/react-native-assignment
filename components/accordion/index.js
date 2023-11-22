@@ -1,11 +1,20 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {COLORS} from '../../utils/theme';
-const Accordion = ({accordionName, icon, children, isSelected, onChange,isOpen=false}) => {
-  
-  const [isActive, setIsActive] = useState(isOpen);
+const Accordion = ({
+  accordionName,
+  icon,
+  children,
+  isSelected,
+  onChange,
+  isOpen = false,
+}) => {
+  useEffect(() => {
+    setIsActive(isOpen);
+  }, [isOpen]);
+  const [isActive, setIsActive] = useState();
   return (
     <View>
       <TouchableOpacity
@@ -14,9 +23,10 @@ const Accordion = ({accordionName, icon, children, isSelected, onChange,isOpen=f
             ? () => {
                 setIsActive(!isActive);
               }
-            : ()=>{onChange
-            setIsActive(!isActive)
-            }
+            : () => {
+                onChange;
+                setIsActive(!isActive);
+              }
         }
         style={styles.accordion}>
         <View style={{marginLeft: 10, width: '10%'}}>
@@ -33,7 +43,7 @@ const Accordion = ({accordionName, icon, children, isSelected, onChange,isOpen=f
           />
         </View>
       </TouchableOpacity>
-      {isActive&& <View style={styles.child}>{children}</View>}
+      {isActive && <View style={styles.child}>{children}</View>}
     </View>
   );
 };
@@ -51,6 +61,7 @@ const styles = StyleSheet.create({
     color: COLORS.fontColor,
     fontWeight: '400',
     paddingLeft: 8,
+    fontSize:16
   },
   child: {
     marginLeft: 8,

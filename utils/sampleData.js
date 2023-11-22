@@ -12,7 +12,7 @@ export const ProductsDetails = [
       mrp: "1300",
       sizes: ["S", "M", "L", "XL"],
   
-      category: "topwear",
+      category: "topwear",latest:"N"
     },
     {
       section: "men",
@@ -28,7 +28,7 @@ export const ProductsDetails = [
       mrp: "1370",
       sizes: ["S", "M", "L", "XL", "XXL"],
   
-      category: "topwear",
+      category: "topwear",latest:"N"
     },
     {
       section: "men",
@@ -59,7 +59,7 @@ export const ProductsDetails = [
       mrp: "1370",
       sizes: ["S", "M", "L", "XL", "XXL"],
   
-      category: "topwear",
+      category: "topwear",latest:"N"
     },
     {
       section: "women",
@@ -75,7 +75,7 @@ export const ProductsDetails = [
       mrp: "1099",
       sizes: ["S", "M", "L"],
   
-      category: "topwear",
+      category: "topwear",latest:"N"
     },
     {
       section: "kid",
@@ -90,7 +90,7 @@ export const ProductsDetails = [
       price: "899",
       mrp: "1800",
       sizes: ["XXS", "S", "M"],
-      category: "topwear",
+      category: "topwear",latest:"N"
     },
     {
       section: "kid",
@@ -104,7 +104,7 @@ export const ProductsDetails = [
       price: "899",
       mrp: "1800",
       sizes: ["XXS", "S", "M"],
-      category: "topwear",
+      category: "topwear",latest:"N"
     },
     {
       section: "women",
@@ -120,7 +120,7 @@ export const ProductsDetails = [
       mrp: "1099",
       sizes: ["S", "M", "L", "Xl"],
   
-      category: "topwear",
+      category: "topwear",latest:"N"
     },
     {
       section: "women",
@@ -204,7 +204,7 @@ export const ProductsDetails = [
     },
     {
       section: "women",
-      id: "13",
+      id: "1366",
       name: "Dsiney Top",
       description: "Women Coropped Top",
       image: [
@@ -216,7 +216,7 @@ export const ProductsDetails = [
       mrp: "1799",
       sizes: ["XS", "S", "M", "L"],
   
-      category: "topwear",
+      category: "topwear",latest:"N"
     },
     {
       section: "women",
@@ -232,7 +232,7 @@ export const ProductsDetails = [
       mrp: "999",
       sizes: ["XS", "S", "M", "L"],
   
-      category: "topwear",
+      category: "topwear",latest:"N"
     },
     {
       section: "women",
@@ -264,7 +264,115 @@ export const ProductsDetails = [
       price: "899",
       mrp: "1000",
       sizes: ["XXS", "S", "M"],
-      category: "topwear",
+      category: "topwear",latest:"N"
+    },
+    {
+      section: "men",
+      id: "17",
+      name: "The Boys: Official Logo",
+      description: "Boys Oversized Hoodies",
+      image: [
+        "https://prod-img.thesouledstore.com/public/theSoul/uploads/catalog/product/1700643936_1277260.jpg?format=webp&w=480&dpr=1.0",
+        "https://prod-img.thesouledstore.com/public/theSoul/uploads/catalog/product/1700643936_2302916.jpg?format=webp&w=480&dpr=1.0",
+        "https://prod-img.thesouledstore.com/public/theSoul/uploads/catalog/product/1700643936_3133973.jpg?format=webp&w=480&dpr=1.0",
+
+      ],
+      price: "1899",
+      mrp: "2000",
+      sizes: ["S", "M", "L","XL"],
+      category: "topwear",latest:"Y"
+  
+    },
+    {
+      section: "men",
+      id: "18",
+      name: "Looney Tunes: Samurai Bugs",
+      description: "Oversized Full Sleeve T-Shirts",
+      image: [
+        "https://prod-img.thesouledstore.com/public/theSoul/uploads/catalog/product/1699595232_2936807.jpg?format=webp&w=480&dpr=1.0",
+        "https://prod-img.thesouledstore.com/public/theSoul/uploads/catalog/product/1699595232_2051010.jpg?format=webp&w=480&dpr=1.0",
+        "https://prod-img.thesouledstore.com/public/theSoul/uploads/catalog/product/1699595232_4106785.jpg?format=webp&w=480&dpr=1.0",
+
+      ],
+      price: "899",
+      mrp: "2000",
+      sizes: ["S", "M", "L","XL"],
+      category: "topwear",latest:"Y"
+  
+    },
+    {
+      section: "men",
+      id: "19",
+      name: "Cartoon Network: Johnny Bravo",
+      description: "Oversized Full Sleeve T-Shirts",
+      image: [
+        "https://prod-img.thesouledstore.com/public/theSoul/uploads/catalog/product/1700288836_1223808.jpg?format=webp&w=480&dpr=1.0",
+        "https://prod-img.thesouledstore.com/public/theSoul/uploads/catalog/product/1694601081_7412459.jpg?format=webp&w=480&dpr=1.0",
+       
+
+      ],
+      price: "899",
+      mrp: "2000",
+      sizes: ["S", "M", "L","XL"],
+      category: "topwear",latest:"Y"
+  
+    },
+    {
+      section: "women",
+      id: "20",
+      name: "Solids:(Colourblock)",
+      description: "Oversized Full Sleeve T-Shirts",
+      image: [
+
+        "https://prod-img.thesouledstore.com/public/theSoul/uploads/catalog/product/1699682537_5023933.jpg?format=webp&w=480&dpr=1.0",
+        "https://prod-img.thesouledstore.com/public/theSoul/uploads/catalog/product/1698213775_4881269.jpg?format=webp&w=480&dpr=1.0",
+        "https://prod-img.thesouledstore.com/public/theSoul/uploads/catalog/product/1698213775_4558731.jpg?format=webp&w=480&dpr=1.0"
+
+
+      ],
+      price: "1299",
+      mrp: "1800",
+      sizes: ["S", "M", "L",],
+      category: "topwear",latest:"Y"
+  
+    },
+    {
+      section: "women",
+      id: "21",
+      name: "The Jetsons: Galactic Charm",
+      description: "Oversized  T-Shirts",
+      image: [
+
+        "https://prod-img.thesouledstore.com/public/theSoul/uploads/catalog/product/1698061960_6984780.jpg?format=webp&w=480&dpr=1.0",
+        "https://prod-img.thesouledstore.com/public/theSoul/uploads/catalog/product/1698991257_4505623.jpg?format=webp&w=480&dpr=1.0",
+        "https://prod-img.thesouledstore.com/public/theSoul/uploads/catalog/product/1698061960_7012793.jpg?format=webp&w=480&dpr=1.0"
+
+
+      ],
+      price: "1099",
+      mrp: "1400",
+      sizes: ["S", "M", "L",],
+      category: "topwear",latest:"Y"
+  
+    },
+    {
+      section: "kid",
+      id: "23",
+      name: "Marvel: Avengers Assemble",
+      description: "Kids Hoodies",
+      image: [
+
+        "https://prod-img.thesouledstore.com/public/theSoul/uploads/catalog/product/1697260359_3288722.jpg?format=webp&w=480&dpr=1.0",
+        "https://prod-img.thesouledstore.com/public/theSoul/uploads/catalog/product/1687524023_3876210.jpg?format=webp&w=480&dpr=1.0",
+        "https://prod-img.thesouledstore.com/public/theSoul/uploads/catalog/product/1687524023_7876227.jpg?format=webp&w=480&dpr=1.0"
+
+
+      ],
+      price: "999",
+      mrp: "1400",
+      sizes: ["S", "M", "L",],
+      category: "topwear",latest:"Y"
+  
     },
   ];
   

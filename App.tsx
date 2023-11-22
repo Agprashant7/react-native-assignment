@@ -10,6 +10,7 @@ import {ProductsDetails} from './utils/sampleData';
 import {ThemeProvider} from '@rneui/themed';
 import { ProductScreen } from './components/screens/productScreen';
 import CheckoutScreen from './components/screens/checkoutScreen';
+import SectionScreen from './components/screens/sectionScreen';
 export const ProductsDetailsContext = createContext();
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
@@ -24,7 +25,8 @@ function AppDrawerStack() {
         }}
         drawerContent={props => <CustomSidebarMenu {...props} />}>
         <Drawer.Screen name="Demo App" component={MainScreen} />
-      
+        <Drawer.Screen name="Section" component={SectionScreen} />
+        <Drawer.Screen  name="Product" component={ProductScreen} />
       </Drawer.Navigator>
   
   );
@@ -43,7 +45,7 @@ export default function App() {
           
           }}>
           <Stack.Screen name="AppDrawerStack" component={AppDrawerStack} />
-          <Stack.Screen  name="Product" component={ProductScreen} />
+   
           <Stack.Screen  name="Checkout" component={CheckoutScreen} />
         </Stack.Navigator>
       </NavigationContainer>

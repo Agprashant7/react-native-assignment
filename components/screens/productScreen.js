@@ -1,6 +1,6 @@
 import {StyleSheet, View} from 'react-native';
 import {COLORS} from '../../utils/theme';
-import {Image, Text, Chip, Tile} from '@rneui/themed';
+import {Image, Text, Chip, Tile, Overlay} from '@rneui/themed';
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 import SelectDropdown from 'react-native-select-dropdown';
 import React, {useContext, useEffect, useState} from 'react';
@@ -29,7 +29,6 @@ export function ProductScreen({route, navigation}) {
     if (isItemInWishlist.length > 0) {
       setWishlistButton(true);
     }
-    
   };
   useEffect(() => {
     // let ls = JSON.parse(localStorage.getItem("wishlist") || "[]");
@@ -47,7 +46,7 @@ export function ProductScreen({route, navigation}) {
   const [newImage, setNewImage] = useState(0);
   const [itemSchema, setItemSchema] = useState({
     quantity: 1,
-    size: 'L',
+    size: '',
     id: id,
   });
   let getProductDetail = productDetails.filter((res, i) => res.id === id);
@@ -64,15 +63,12 @@ export function ProductScreen({route, navigation}) {
     wishlistButton: false,
   });
   const addToCart = async () => {
-    console.log('cart', cart);
-
     if (!itemSchema.size) {
       setValidation(true);
 
       return;
     }
     if (cart == null) {
-      console.log('88888888');
       setCart([itemSchema]);
       await set('cartItem', itemSchema);
       setMessage({cartButton: true});
@@ -94,16 +90,14 @@ export function ProductScreen({route, navigation}) {
     await set('cartItem', cart);
     setMessage({cartButton: true});
   };
-  const moveToWishlist = async(id, size) => {
-    console.log(id,size)
+  const moveToWishlist = async (id, size) => {
     let wishlistItem = {id: id, size: size};
     wishlist.push(wishlistItem);
     await set('wishlist', wishlist);
     setWishlistButton(true);
   };
   return getProductDetail ? (
-    <ScrollView
-      style={styles.containerStyle}>
+    <ScrollView style={styles.containerStyle}>
       <View style={{flex: 2}}>
         <View style={{flex: 3}}>
           <Image
@@ -113,8 +107,7 @@ export function ProductScreen({route, navigation}) {
               uri: getProductDetail.image[newImage],
             }}
           />
-          <View
-            style={styles.flexContainer}>
+          <View style={styles.flexContainer}>
             {getProductDetail.image.map((img, i) => {
               return (
                 <Image
@@ -131,14 +124,10 @@ export function ProductScreen({route, navigation}) {
           </View>
         </View>
         <View style={{marginTop: 20}}>
-          <Text h3>
-            {getProductDetail.name}
-          </Text>
-          <Text >
-            {getProductDetail.description}
-          </Text>
+          <Text h3>{getProductDetail.name}</Text>
+          <Text>{getProductDetail.description}</Text>
           <View style={styles.priceContainer}>
-            <Text h4 >
+            <Text h4>
               &#8377;{getProductDetail.price}{' '}
               <Text style={{textDecorationLine: 'line-through', fontSize: 14}}>
                 {' '}
@@ -155,9 +144,8 @@ export function ProductScreen({route, navigation}) {
             </Text>
           </View>
           <View style={{flex: 1}}>
-            <Text >Select Size</Text>
-            <View
-              style={styles.chipContainer}>
+            <Text>Select Size</Text>
+            <View style={styles.chipContainer}>
               {getProductDetail.sizes.map((size, i) => {
                 return (
                   <Chip
@@ -168,7 +156,11 @@ export function ProductScreen({route, navigation}) {
                     title={size}
                     key={i}
                     type="solid"
-                    color={'white'}
+                    color={
+                      itemSchema.size == size
+                        ? COLORS.secondary
+                        : COLORS.fontColor
+                    }
                     titleStyle={{color: '#000'}}
                   />
                 );
@@ -224,8 +216,12 @@ export function ProductScreen({route, navigation}) {
             )}
             <View style={{flexDirection: 'row', gap: 10, marginBottom: 10}}>
               <Button
-                onPress={message.cartButton ? () => navigation.navigate('Cart') : addToCart}
-                type='solid'
+                onPress={
+                  message.cartButton
+                    ? () => navigation.navigate('Cart')
+                    : addToCart
+                }
+                type="solid"
                 title={message.cartButton ? 'Go to cart' : 'Add to cart'}
               />
               <Button
@@ -248,43 +244,37 @@ export function ProductScreen({route, navigation}) {
                 }
                 type="outline"
                 onPress={
-                  !wishlistButton ? (
-                    () =>
-                      moveToWishlist(
-                        id,
-                        !itemSchema.size
-                          ? getProductDetail.sizes[0]
-                          : itemSchema.size,
-                      )
-                  ) : (
-                   ()=> navigation.navigate('Wishlist')
-                  )
+                  !wishlistButton
+                    ? () =>
+                        moveToWishlist(
+                          id,
+                          !itemSchema.size
+                            ? getProductDetail.sizes[0]
+                            : itemSchema.size,
+                        )
+                    : () => navigation.navigate('Wishlist')
                 }
-                title={wishlistButton ? "Wishlisted" : "Add to wishlist"}
+                title={wishlistButton ? 'Wishlisted' : 'Add to wishlist'}
               />
             </View>
-            <View style={{marginTop: 20}}>
-              <Text h4 >
-                Product Details
-              </Text>
-              <Text >
-                Material Care: 98% Cotton 2% Spandex Machine Wash
-              </Text>
-              <Text >
-                Manufactured & Sold By:
-              </Text>
-              <Text >
+            <View style={styles.productDetails}>
+              <Text h4>Product Details</Text>
+              <Text>Material Care: 98% Cotton 2% Spandex Machine Wash</Text>
+              <Text>Manufactured & Sold By:</Text>
+              <Text>
                 The Demo Store Pvt Ltd 07,ABCD Road Bengaluru-560073
                 demostore@gmail.com
               </Text>
-              <Text >
-                {' '}
-                Country Origin:India
-              </Text>
+              <Text> Country Origin:India</Text>
             </View>
           </View>
         </View>
       </View>
+      <Overlay
+        isVisible={validation}
+        onBackdropPress={() => setValidation(!validation)}>
+        <Text style={{color: COLORS.secondary}}>{'Please select size'}</Text>
+      </Overlay>
     </ScrollView>
   ) : (
     <></>
@@ -292,8 +282,12 @@ export function ProductScreen({route, navigation}) {
 }
 
 const styles = StyleSheet.create({
-  containerStyle:{backgroundColor: COLORS.backgroundColor, paddingHorizontal: 20},
-  flexContainer:{
+  containerStyle: {
+    backgroundColor: COLORS.backgroundColor,
+    paddingHorizontal: 20,
+    paddingTop: 10,
+  },
+  flexContainer: {
     marginTop: 20,
     display: 'flex',
     flexDirection: 'row',
@@ -301,15 +295,16 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     justifyContent: 'center',
   },
-  priceContainer:{flexDirection: 'row', marginTop: 5, marginBottom: 5},
-  chipContainer:{
+  priceContainer: {flexDirection: 'row', marginTop: 5, marginBottom: 5},
+  chipContainer: {
     flexDirection: 'row',
     gap: 4,
     width: '50%',
     marginBottom: 10,
     marginTop: 10,
   },
-  buttonStyle:{
+  productDetails: {marginTop: 20, marginBottom: 20},
+  buttonStyle: {
     marginTop: 5,
     width: '18%',
     height: 50,
@@ -317,6 +312,4 @@ const styles = StyleSheet.create({
     borderColor: '#000',
     borderWidth: 0.5,
   },
-
 });
-

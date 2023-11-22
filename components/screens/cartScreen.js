@@ -15,7 +15,7 @@ import GetProductDetailById from '../../utils/getProductDetailById';
 import {discountedPrice} from './productScreen';
 import Placeholder from '../placeholder';
 
-const CartScreen = ({route,navigation}) => {
+const CartScreen = ({route, navigation}) => {
   const asyncFun = async () => {
     const cartLs = await get('cartItem');
     let wishLs = await get('wishlist');
@@ -26,7 +26,7 @@ const CartScreen = ({route,navigation}) => {
   useEffect(() => {
     asyncFun();
     // remove('cartItem')
-  }, [cartItem]);
+  }, []);
   const [cartItem, setCartItem] = useState([]) || [];
   const [wishlist, SetWishlist] = useState([]) || [];
   const [amountDetails, setAmountDetails] = useState({
@@ -35,6 +35,7 @@ const CartScreen = ({route,navigation}) => {
     gst: '',
     amountToPay: '',
   });
+
   let cartArrMrp = cartItem?.map((item, i) => {
     let mrp = GetProductDetailById(item.id).mrp;
     let price = GetProductDetailById(item.id).price;
@@ -54,7 +55,8 @@ const CartScreen = ({route,navigation}) => {
   0);
   let gst = (totalMrp * 5) / 100;
   let amountToPay = totalMrp - totalDiscount + gst;
-  set("total", amountToPay);
+  set('total', amountToPay);
+
   const moveToWishlist = async (id, size) => {
     let wishlistItem = {id: id, size: size};
     let checkIfItemExist = wishlist.filter((res, i) => res.id == id);
@@ -77,7 +79,8 @@ const CartScreen = ({route,navigation}) => {
 
     await set('cartItem', filterCart);
   };
-  return cartItem.length > 0 ? (
+
+  return cartItem?.length > 0 ? (
     <ScrollView style={styles.container}>
       {cartItem?.map((cart, i) => {
         let cartId = cart.id;
@@ -133,6 +136,8 @@ const CartScreen = ({route,navigation}) => {
           </View>
         );
       })}
+      {/* {
+        cartItem?<>  */}
       <View style={styles.amountDetails}>
         <View>
           <Text>Cart Total</Text>
@@ -147,12 +152,18 @@ const CartScreen = ({route,navigation}) => {
           <Text>&#8377;{amountToPay}</Text>
         </View>
       </View>
-      <View>
-        <Button onPress={()=>navigation.navigate('Checkout')} title={'Check out'} />
+      <View style={styles.checkout}>
+        <Button
+          onPress={() => navigation.navigate('Checkout')}
+          title={'Check out'}
+        />
       </View>
+      {/* </>:<></>
+      }
+      */}
     </ScrollView>
   ) : (
-    <Placeholder/>
+    <Placeholder />
   );
 };
 export default CartScreen;
@@ -205,5 +216,11 @@ const styles = StyleSheet.create({
     marginRight: 'auto',
     flexDirection: 'row',
     justifyContent: 'space-around',
+  },
+  checkout: {
+    width: '50%',
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    marginTop: 20,
   },
 });

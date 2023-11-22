@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyleSheet, View, Text} from 'react-native';
 import {COLORS} from '../../utils/theme';
-const OptionCards = ({cardName, bgColor, icon, count, isSelected}) => {
+const OptionCards = ({cardName, bgColor, icon, count, isSelected, fontSize=16}) => {
   return (
     <View style={[styles.optionCard, {backgroundColor: bgColor}]}>
       <View style={{marginLeft: 10, width: '10%'}}>
@@ -9,7 +9,7 @@ const OptionCards = ({cardName, bgColor, icon, count, isSelected}) => {
         {isSelected ? <View style={styles.dot}></View> : <></>}
       </View>
 
-      <Text style={styles.cardName}>{cardName}</Text>
+      <Text style={[styles.cardName,{fontSize:fontSize}]}>{cardName}</Text>
       {count > 0 ? (
         <View style={styles.redBox}>
           <Text style={styles.count}>{count > 99 ? '99+' : count}</Text>
