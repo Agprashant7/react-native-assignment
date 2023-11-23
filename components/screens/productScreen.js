@@ -1,7 +1,7 @@
 import {StyleSheet, View} from 'react-native';
 import {COLORS} from '../../utils/theme';
 import {Image, Text, Chip, Tile, Overlay} from '@rneui/themed';
-import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
+import {ScrollView} from 'react-native-gesture-handler';
 import SelectDropdown from 'react-native-select-dropdown';
 import React, {useContext, useEffect, useState} from 'react';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -9,7 +9,7 @@ import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Input, Button} from '@rneui/themed';
 import {ProductsDetailsContext} from '../../App';
 import {get, remove, set} from '../../utils/localStorage';
-import {Colors} from 'react-native/Libraries/NewAppScreen';
+import {useFocusEffect} from '@react-navigation/native';
 import AlertBanner from '../alertBanner';
 export const discountedPrice = (mrp, price) => {
   let calculate = mrp - price;
@@ -23,35 +23,41 @@ export function ProductScreen({route, navigation}) {
   const asyncFun = async () => {
     const cartLs = await get('cartItem');
     let wishLs = await get('wishlist');
-    let isItemInWishlist = wishLs.filter((item, i) => item.id == id);
+
     setCart(cartLs);
     SetWishlist(wishLs);
-    if (isItemInWishlist.length > 0) {
-      setWishlistButton(true);
-    }
   };
+
   useEffect(() => {
-    // let ls = JSON.parse(localStorage.getItem("wishlist") || "[]");
-    // let isItemInWishlist = ls.filter((item, i) => item.id == id);
-    // SetWishlist(ls);
-    // if (isItemInWishlist.length > 0) {
-    //   setWishlistButton(true);
-
-    // }
-    //  remove('cartItem')
     asyncFun();
-  }, []);
-  const productDetails = useContext(ProductsDetailsContext);
+  }, [wishlist]);
 
+  useFocusEffect(
+    React.useCallback(() => {
+      // Do something when the screen is focused
+      asyncFun();
+      return () => {
+        // Do something when the screen is unfocused
+        // Useful for cleanup functions
+        setMessage({cartButton: false});
+        setItemSchema({size: '', quantity: 1, id: id});
+        setWishlistButton(false);
+      };
+    }, [navigation]),
+  );
+
+  const productDetails = useContext(ProductsDetailsContext);
   const [newImage, setNewImage] = useState(0);
   const [itemSchema, setItemSchema] = useState({
     quantity: 1,
     size: '',
-    id: id,
+    id: '',
   });
+
   let getProductDetail = productDetails.filter((res, i) => res.id === id);
+
   getProductDetail = getProductDetail[0];
-  const [selected, setSelected] = useState(undefined);
+
   const quantity = ['1', '2', '3', '4'];
   const [cart, setCart] = useState([]) || [];
   const [validation, setValidation] = useState(false);
@@ -60,17 +66,19 @@ export function ProductScreen({route, navigation}) {
   const [message, setMessage] = useState({
     itemExist: false,
     cartButton: false,
-    wishlistButton: false,
   });
+
   const addToCart = async () => {
+    itemSchema.id = id;
     if (!itemSchema.size) {
       setValidation(true);
 
       return;
     }
+
     if (cart == null) {
       setCart([itemSchema]);
-      await set('cartItem', itemSchema);
+      await set('cartItem', [itemSchema]);
       setMessage({cartButton: true});
       return;
     }
@@ -90,12 +98,20 @@ export function ProductScreen({route, navigation}) {
     await set('cartItem', cart);
     setMessage({cartButton: true});
   };
+
   const moveToWishlist = async (id, size) => {
     let wishlistItem = {id: id, size: size};
     wishlist.push(wishlistItem);
     await set('wishlist', wishlist);
+    wishlistTitle(id);
     setWishlistButton(true);
   };
+
+  const wishlistTitle = id => {
+    let isItemInWishlist = wishlist?.filter((item, i) => item.id == id);
+    return isItemInWishlist.length > 0 ? true : false;
+  };
+
   return getProductDetail ? (
     <ScrollView style={styles.containerStyle}>
       <View style={{flex: 2}}>
@@ -124,7 +140,6 @@ export function ProductScreen({route, navigation}) {
           </View>
         </View>
         <View style={{marginTop: 20}}>
-          <Text h3>{getProductDetail.name}</Text>
           <Text>{getProductDetail.description}</Text>
           <View style={styles.priceContainer}>
             <Text h4>
@@ -226,7 +241,7 @@ export function ProductScreen({route, navigation}) {
               />
               <Button
                 icon={
-                  wishlistButton ? (
+                  wishlistTitle(getProductDetail.id) ? (
                     <Icon
                       name="sentiment-very-satisfied"
                       size={24}
@@ -244,7 +259,7 @@ export function ProductScreen({route, navigation}) {
                 }
                 type="outline"
                 onPress={
-                  !wishlistButton
+                  !wishlistTitle(getProductDetail.id)
                     ? () =>
                         moveToWishlist(
                           id,
@@ -254,7 +269,11 @@ export function ProductScreen({route, navigation}) {
                         )
                     : () => navigation.navigate('Wishlist')
                 }
-                title={wishlistButton ? 'Wishlisted' : 'Add to wishlist'}
+                title={
+                  wishlistTitle(getProductDetail.id) && wishlistButton
+                    ? 'Wishlisted'
+                    : 'Add to wishlist'
+                }
               />
             </View>
             <View style={styles.productDetails}>

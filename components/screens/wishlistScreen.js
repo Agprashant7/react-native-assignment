@@ -1,27 +1,33 @@
 import {Button, Text} from '@rneui/themed';
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, View} from 'react-native';
-import {ScrollView} from 'react-native-gesture-handler';
+import {StyleSheet, View,ScrollView} from 'react-native';
 import {COLORS} from '../../utils/theme';
 import {get, remove, set} from '../../utils/localStorage';
 import ItemCard from '../itemCard';
 import GetProductDetailById from '../../utils/getProductDetailById';
 import Placeholder from '../placeholder';
-
+import {useFocusEffect} from '@react-navigation/native';
 const WishlistScreen = ({route, navigation}) => {
   const asyncFun = async () => {
-    // const cartLs = await get('cartItem');
+    const cartLs = await get('cartItem')||[];
     let wishLs = await get('wishlist');
     // let isItemInWishlist = wishLs.filter((item, i) => item.id == id);
-    // setCartItem(cartLs);
+   setCartItem(cartLs);
     SetWishlist(wishLs);
   };
   useEffect(() => {
     asyncFun();
     // remove('cartItem')
   }, [wishlist]);
-  const [wishlist, SetWishlist] = useState([]) || [];
 
+  useFocusEffect(
+    React.useCallback(() => {
+      asyncFun();
+      // };
+    }, [wishlist]),
+  );
+  const [wishlist, SetWishlist] = useState([]) || [];
+const [cartItem,setCartItem]=useState([])||[]
   const addToCart = async (id, size) => {
     let cartSchema = {quantity: 1, size: size, id: id};
     remove('wishlist');
@@ -41,13 +47,12 @@ const WishlistScreen = ({route, navigation}) => {
 
     await set('wishlist', wishlistLs);
   };
-  const checkItemInCart = async id => {
-    let cartLocalStorage = (await get('cartItem')) || [];
-    let item = cartLocalStorage.filter((res, i) => res.id == id);
-    if (item.length > 0) {
-      return true;
-    }
-    return false;
+  const checkItemInCart =  (id) => {
+
+    let item = cartItem.filter((res, i) => res.id == id);
+   
+ 
+    return item;
   };
   return wishlist?.length > 0 ? (
     <ScrollView contentContainerStyle={styles.containerStyle}>
@@ -67,13 +72,12 @@ const WishlistScreen = ({route, navigation}) => {
               title={'Remove'}
             />
             <Button
-              disabled={!!checkItemInCart(item.id)}
+              disabled={checkItemInCart(item.id).length>0?true:false }
               onPress={() => addToCart(item.id, item.size)}
               type="clear"
-              title={
-                checkItemInCart(item.id) ? 'Already In Cart' : 'Add TO Cart'
-              }
+              title={checkItemInCart(item.id).length>0 ? "Already In Cart" : "Add TO Cart"}
             />
+      
           </View>
         );
       })}

@@ -1,6 +1,6 @@
 import {Button, CheckBox, Text, Overlay} from '@rneui/themed';
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import {COLORS} from '../../utils/theme';
 import Accordion from '../accordion';
@@ -9,7 +9,7 @@ import {Image} from '@rneui/base';
 import {get, remove} from '../../utils/localStorage';
 import GetProductDetailById from '../../utils/getProductDetailById';
 import CheckoutForm from '../form';
-const CheckoutScreen = ({route,navigation}) => {
+const CheckoutScreen = ({route, navigation}) => {
   const asyncFun = async () => {
     const cartLs = await get('cartItem');
     const total = await get('total');
@@ -35,14 +35,15 @@ const CheckoutScreen = ({route,navigation}) => {
     remove('cartItem');
     remove('wishlisht');
     remove('total');
-    navigation.navigate('Home')
-    
+    navigation.navigate('Home');
   };
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Text h4 style={{marginTop: 20}}>
-        Checkout
-      </Text>
+    <View style={styles.container}>
+      <View>
+        <Text h4 style={{marginTop: 20}}>
+          Checkout
+        </Text>
+      </View>
       <View style={styles.topFlex}>
         <View>
           <Text>No Of Item</Text>
@@ -52,19 +53,20 @@ const CheckoutScreen = ({route,navigation}) => {
         </View>
       </View>
       <View style={styles.accordionContainer}>
-        <View>
-          <Accordion
-            accordionName={'Cart Details'}
-            icon={
-              <FontAwesome5
-                name={'shopping-cart'}
-                size={20}
-                color={COLORS.fontColor}
-              />
-            }>
-            <View style={styles.accordionChild}>
-              {cartItem.map((item, i) => {
-                return (
+        {/* <ScrollView contentContainerStyle={{height:'auto'}}> */}
+        <Accordion
+          accordionName={'Cart Details'}
+          icon={
+            <FontAwesome5
+              name={'shopping-cart'}
+              size={20}
+              color={COLORS.fontColor}
+            />
+          }>
+          <View style={styles.accordionChild}>
+            {cartItem.map((item, i) => {
+              return (
+                i < 3 && (
                   <View key={i} style={styles.childitem}>
                     <Image
                       resizeMode="stretch"
@@ -88,19 +90,26 @@ const CheckoutScreen = ({route,navigation}) => {
                       </View>
                     </View>
                   </View>
-                );
-              })}
-              <View style={styles.totalAmt}>
-                <View>
-                  <Text>Total Amount To Pay</Text>
-                </View>
-                <View>
-                  <Text> &#8377;{totalAmt}</Text>
-                </View>
+                )
+              );
+            })}
+            {cartItem.length > 3 && (
+              <TouchableOpacity onPress={()=>navigation.navigate('Cart')} style={styles.seemore}>
+                <Text style={{color: COLORS.secondary}}>See More</Text>
+              </TouchableOpacity>
+            )}
+
+            <View style={styles.totalAmt}>
+              <View>
+                <Text>Total Amount To Pay</Text>
+              </View>
+              <View>
+                <Text> &#8377;{totalAmt}</Text>
               </View>
             </View>
-          </Accordion>
-        </View>
+          </View>
+        </Accordion>
+        {/* </ScrollView> */}
         <View style={{marginTop: 10, marginBottom: 10}}>
           {/* <ScrollView> */}
           <Accordion
@@ -166,18 +175,18 @@ const CheckoutScreen = ({route,navigation}) => {
         title={'place order'}
       />
       <Overlay isVisible={showModal} onBackdropPress={placeOrder}>
-        <Text h4 style={{color:COLORS.secondary}}>Congrats,{address?.firstName}</Text>
-        <View style={{marginTop:10}}>
-        <Text
-         style={{color: COLORS.secondary, fontSize: 14}}>
-          {' '}
-          Your order has been successfully placed, for more updates keep
-          checking {address?.email}
+        <Text h4 style={{color: COLORS.secondary}}>
+          Congrats,{address?.firstName}
         </Text>
+        <View style={{marginTop: 10}}>
+          <Text style={{color: COLORS.secondary, fontSize: 14}}>
+            {' '}
+            Your order has been successfully placed, for more updates keep
+            checking {address?.email}
+          </Text>
         </View>
-       
       </Overlay>
-    </ScrollView>
+    </View>
   );
 };
 
@@ -199,8 +208,10 @@ const styles = StyleSheet.create({
   accordionContainer: {
     marginTop: 20,
     marginLeft: -2,
+    justifyContent: 'flex-start',
   },
   accordionChild: {
+    overflow: 'scroll',
     width: '100%',
     height: 'auto',
     backgroundColor: COLORS.primary,
@@ -226,6 +237,7 @@ const styles = StyleSheet.create({
   totalAmt: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    paddingBottom:10
+    paddingBottom: 10,
   },
+  seemore: {alignItems: 'center', marginLeft: 10, marginBottom: 10},
 });

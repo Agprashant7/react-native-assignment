@@ -2,10 +2,7 @@ import {Image} from '@rneui/base';
 import {Input, Text, Button} from '@rneui/themed';
 import React, {useEffect, useLayoutEffect, useState} from 'react';
 import {
-  Alert,
-  FlatList,
   StyleSheet,
-  TouchableOpacity,
   View,
 } from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
@@ -14,12 +11,13 @@ import {get, remove, set} from '../../utils/localStorage';
 import GetProductDetailById from '../../utils/getProductDetailById';
 import {discountedPrice} from './productScreen';
 import Placeholder from '../placeholder';
-
+import {useFocusEffect} from '@react-navigation/native';
 const CartScreen = ({route, navigation}) => {
   const asyncFun = async () => {
+    // await remove('cartItem')
+    // return
     const cartLs = await get('cartItem');
     let wishLs = await get('wishlist');
-    // let isItemInWishlist = wishLs.filter((item, i) => item.id == id);
     setCartItem(cartLs);
     SetWishlist(wishLs);
   };
@@ -27,6 +25,12 @@ const CartScreen = ({route, navigation}) => {
     asyncFun();
     // remove('cartItem')
   }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      asyncFun();
+      // };
+    }, []),
+  );
   const [cartItem, setCartItem] = useState([]) || [];
   const [wishlist, SetWishlist] = useState([]) || [];
   const [amountDetails, setAmountDetails] = useState({
@@ -59,15 +63,20 @@ const CartScreen = ({route, navigation}) => {
 
   const moveToWishlist = async (id, size) => {
     let wishlistItem = {id: id, size: size};
-    let checkIfItemExist = wishlist.filter((res, i) => res.id == id);
-    if (checkIfItemExist) {
+
+    let checkIfItemExist = wishlist?.filter((res, i) => res.id === id);
+    if (checkIfItemExist.length>0) {
       removeFromCart(id, size);
       return;
     }
-
+    if(wishlist===null){
+      SetWishlist([wishlistItem])
+      await set('wishlist', [wishlistItem]);
+      removeFromCart(id, size);
+      return
+    }
     wishlist.push(wishlistItem);
-    console.log('WISHLIST', wishlist);
-    await set('wishlist', wishlist);
+        await set('wishlist', wishlist);
 
     // remove from cart
     removeFromCart(id, size);
@@ -139,13 +148,13 @@ const CartScreen = ({route, navigation}) => {
       {/* {
         cartItem?<>  */}
       <View style={styles.amountDetails}>
-        <View>
+        <View  style={{gap:5,marginTop:15}}>
           <Text>Cart Total</Text>
           <Text>Discount</Text>
           <Text>GST</Text>
           <Text>Amount To Pay</Text>
         </View>
-        <View>
+        <View style={{gap:5,marginTop:15}}>
           <Text>&#8377;{totalMrp}</Text>
           <Text>- &#8377;{totalDiscount}</Text>
           <Text>+&#8377;{gst}</Text>
@@ -208,7 +217,8 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   amountDetails: {
-    width: '95%',
+    marginTop:10,
+    width: '90%',
     height: 150,
     elevation: 5,
     backgroundColor: COLORS.primary,
