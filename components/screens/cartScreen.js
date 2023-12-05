@@ -12,34 +12,36 @@ import GetProductDetailById from '../../utils/getProductDetailById';
 import {discountedPrice} from './productScreen';
 import Placeholder from '../placeholder';
 import {useFocusEffect} from '@react-navigation/native';
-const CartScreen = ({route, navigation}) => {
-  const asyncFun = async () => {
-    // await remove('cartItem')
-    // return
-    const cartLs = await get('cartItem');
-    let wishLs = await get('wishlist');
-    setCartItem(cartLs);
-    SetWishlist(wishLs);
-  };
+import { useSelector, useDispatch } from "react-redux";
+import {
+  addToWishlist,
+  removeItem,
+  setCartAmount,
+} from "../../actions";
+const CartScreen =  ({route, navigation}) => {
   useEffect(() => {
-    asyncFun();
+   // asyncFun();
     // remove('cartItem')
   }, []);
-  useFocusEffect(
-    React.useCallback(() => {
-      asyncFun();
-      // };
-    }, []),
-  );
-  const [cartItem, setCartItem] = useState([]) || [];
-  const [wishlist, SetWishlist] = useState([]) || [];
+
+  const dispatch = useDispatch();
+  const cartRedux = useSelector((state) => state.cart.cart);
+  const wishlistRedux = useSelector((state) => state.wishlist.wishlist);
+  // console.log('!!!!CART REDUX!!!!', cartRedux);
+  // console.log('!!!!WISHLIST REDUX!!!!', wishlistRedux);
+  const [cartItem, setCartItem] = useState(cartRedux)
+  const [wishlist, SetWishlist] = useState(wishlistRedux) 
   const [amountDetails, setAmountDetails] = useState({
     totalMrp: '',
     totalDiscount: '',
     gst: '',
     amountToPay: '',
   });
-
+  useFocusEffect(
+    React.useCallback(() => {
+      setCartItem(cartRedux)
+    }, [cartRedux]),
+  );
   let cartArrMrp = cartItem?.map((item, i) => {
     let mrp = GetProductDetailById(item.id).mrp;
     let price = GetProductDetailById(item.id).price;
@@ -59,7 +61,8 @@ const CartScreen = ({route, navigation}) => {
   0);
   let gst = (totalMrp * 5) / 100;
   let amountToPay = totalMrp - totalDiscount + gst;
-  set('total', amountToPay);
+   //set('total', amountToPay);
+
 
   const moveToWishlist = async (id, size) => {
     let wishlistItem = {id: id, size: size};
@@ -70,14 +73,11 @@ const CartScreen = ({route, navigation}) => {
       return;
     }
     if(wishlist===null){
-      SetWishlist([wishlistItem])
-      await set('wishlist', [wishlistItem]);
+      dispatch(addToWishlist(wishlistItem));
       removeFromCart(id, size);
       return
     }
-    wishlist.push(wishlistItem);
-        await set('wishlist', wishlist);
-
+    dispatch(addToWishlist(wishlistItem));
     // remove from cart
     removeFromCart(id, size);
   };
@@ -86,7 +86,8 @@ const CartScreen = ({route, navigation}) => {
     const filterCart = cartItem.filter((res, i) => res.id + res.size != concat);
     setCartItem(filterCart);
 
-    await set('cartItem', filterCart);
+    // await set('cartItem', filterCart);
+    dispatch(removeItem(concat));
   };
 
   return cartItem?.length > 0 ? (
@@ -163,7 +164,7 @@ const CartScreen = ({route, navigation}) => {
       </View>
       <View style={styles.checkout}>
         <Button
-          onPress={() => navigation.navigate('Checkout')}
+          onPress={() => navigation.navigate('Checkout',{total:amountToPay})}
           title={'Check out'}
         />
       </View>

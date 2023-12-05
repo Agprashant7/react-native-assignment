@@ -9,18 +9,13 @@ import {Image} from '@rneui/base';
 import {get, remove} from '../../utils/localStorage';
 import GetProductDetailById from '../../utils/getProductDetailById';
 import CheckoutForm from '../form';
+import {useSelector, useDispatch} from 'react-redux';
+import {clearStore} from '../../actions';
 const CheckoutScreen = ({route, navigation}) => {
-  const asyncFun = async () => {
-    const cartLs = await get('cartItem');
-    const total = await get('total');
-    setTotalAmt(total);
-    setCartItem(cartLs);
-  };
-  useEffect(() => {
-    asyncFun();
-  }, []);
-
-  const [cartItem, setCartItem] = useState([]) || [];
+  const total = route?.params?.total;
+  const dispatch = useDispatch();
+  const cartRedux = useSelector(state => state.cart.cart);
+  const [cartItem, setCartItem] = useState(cartRedux);
   const [totalAmt, setTotalAmt] = useState(0);
   const [expanded, setExpanded] = useState(true);
   const [address, setAddress] = useState();
@@ -32,9 +27,7 @@ const CheckoutScreen = ({route, navigation}) => {
   };
   const placeOrder = () => {
     setShowModal(false);
-    remove('cartItem');
-    remove('wishlisht');
-    remove('total');
+    dispatch(clearStore());
     navigation.navigate('Home');
   };
   return (
@@ -94,7 +87,9 @@ const CheckoutScreen = ({route, navigation}) => {
               );
             })}
             {cartItem.length > 3 && (
-              <TouchableOpacity onPress={()=>navigation.navigate('Cart')} style={styles.seemore}>
+              <TouchableOpacity
+                onPress={() => navigation.navigate('Cart')}
+                style={styles.seemore}>
                 <Text style={{color: COLORS.secondary}}>See More</Text>
               </TouchableOpacity>
             )}
@@ -104,7 +99,7 @@ const CheckoutScreen = ({route, navigation}) => {
                 <Text>Total Amount To Pay</Text>
               </View>
               <View>
-                <Text> &#8377;{totalAmt}</Text>
+                <Text> &#8377;{total}</Text>
               </View>
             </View>
           </View>

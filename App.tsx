@@ -11,6 +11,8 @@ import {ThemeProvider} from '@rneui/themed';
 import { ProductScreen } from './components/screens/productScreen';
 import CheckoutScreen from './components/screens/checkoutScreen';
 import SectionScreen from './components/screens/sectionScreen';
+import { Provider } from "react-redux";
+import store from "./store";
 export const ProductsDetailsContext = createContext();
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
@@ -36,6 +38,7 @@ function AppDrawerStack() {
 
 export default function App() {
   return (
+    <Provider store={store}>
     <ProductsDetailsContext.Provider value={ProductsDetails}>
     <ThemeProvider theme={theme}>
       <NavigationContainer>
@@ -51,5 +54,6 @@ export default function App() {
       </NavigationContainer>
     </ThemeProvider>
     </ProductsDetailsContext.Provider>
+    </Provider>
   );
 }

@@ -1,57 +1,44 @@
 import {Button, Text} from '@rneui/themed';
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, View,ScrollView} from 'react-native';
+import {StyleSheet, View, ScrollView} from 'react-native';
 import {COLORS} from '../../utils/theme';
 import {get, remove, set} from '../../utils/localStorage';
 import ItemCard from '../itemCard';
 import GetProductDetailById from '../../utils/getProductDetailById';
 import Placeholder from '../placeholder';
 import {useFocusEffect} from '@react-navigation/native';
+import {useSelector, useDispatch} from 'react-redux';
+import {addItem, removeFromWishlist} from '../../actions';
 const WishlistScreen = ({route, navigation}) => {
-  const asyncFun = async () => {
-    const cartLs = await get('cartItem')||[];
-    let wishLs = await get('wishlist');
-    // let isItemInWishlist = wishLs.filter((item, i) => item.id == id);
-   setCartItem(cartLs);
-    SetWishlist(wishLs);
-  };
-  useEffect(() => {
-    asyncFun();
-    // remove('cartItem')
-  }, [wishlist]);
 
+
+
+  const dispatch = useDispatch();
+  const cartRedux = useSelector(state => state.cart.cart);
+  const wishlistRedux = useSelector(state => state.wishlist.wishlist);
+  const [wishlist, SetWishlist] = useState(wishlistRedux);
+  const [cartItem, setCartItem] = useState(cartRedux);
   useFocusEffect(
     React.useCallback(() => {
-      asyncFun();
+      // asyncFun();
       // };
-    }, [wishlist]),
+      SetWishlist(wishlistRedux);
+      setCartItem(cartRedux);
+    }, [wishlistRedux,cartRedux]),
   );
-  const [wishlist, SetWishlist] = useState([]) || [];
-const [cartItem,setCartItem]=useState([])||[]
-  const addToCart = async (id, size) => {
+  const addToCart = (id, size) => {
     let cartSchema = {quantity: 1, size: size, id: id};
-    remove('wishlist');
-    let cartLocalStorage = (await get('cartItem')) || [];
-
-    cartLocalStorage.push(cartSchema);
-
-    await set('cartItem', cartLocalStorage);
+    dispatch(addItem(cartSchema));
     //removing from wishlist ls
-    removeFromWishlist(id);
+    removeItemFromWishlist(id);
   };
 
-  const removeFromWishlist = async id => {
+  const removeItemFromWishlist = id => {
     let wishlistLs = wishlist.filter((item, i) => item.id !== id);
-
-    SetWishlist(wishlistLs);
-
-    await set('wishlist', wishlistLs);
+    dispatch(removeFromWishlist(id));
   };
-  const checkItemInCart =  (id) => {
-
+  const checkItemInCart = id => {
     let item = cartItem.filter((res, i) => res.id == id);
-   
- 
     return item;
   };
   return wishlist?.length > 0 ? (
@@ -67,17 +54,20 @@ const [cartItem,setCartItem]=useState([])||[]
               size={item.size}
             />
             <Button
-              onPress={() => removeFromWishlist(item.id)}
+              onPress={() => removeItemFromWishlist(item.id)}
               type="clear"
               title={'Remove'}
             />
             <Button
-              disabled={checkItemInCart(item.id).length>0?true:false }
+              disabled={checkItemInCart(item.id).length > 0 ? true : false}
               onPress={() => addToCart(item.id, item.size)}
               type="clear"
-              title={checkItemInCart(item.id).length>0 ? "Already In Cart" : "Add TO Cart"}
+              title={
+                checkItemInCart(item.id).length > 0
+                  ? 'Already In Cart'
+                  : 'Add TO Cart'
+              }
             />
-      
           </View>
         );
       })}
@@ -91,7 +81,8 @@ export default WishlistScreen;
 
 const styles = StyleSheet.create({
   containerStyle: {
-    flex: 1,
+    // flex: 1,
+    height:'100%',
     backgroundColor: COLORS.backgroundColor,
     flexDirection: 'row',
     flexWrap: 'wrap',

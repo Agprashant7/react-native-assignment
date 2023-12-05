@@ -11,6 +11,9 @@ import {ProductsDetailsContext} from '../../App';
 import {get, remove, set} from '../../utils/localStorage';
 import {useFocusEffect} from '@react-navigation/native';
 import AlertBanner from '../alertBanner';
+import {useDispatch, useSelector} from 'react-redux';
+import {addItem, addToWishlist} from '../../actions';
+
 export const discountedPrice = (mrp, price) => {
   let calculate = mrp - price;
   calculate = calculate / mrp;
@@ -19,23 +22,25 @@ export const discountedPrice = (mrp, price) => {
 };
 
 export function ProductScreen({route, navigation}) {
+  const dispatch = useDispatch();
   const id = route?.params?.id;
-  const asyncFun = async () => {
-    const cartLs = await get('cartItem');
-    let wishLs = await get('wishlist');
-
-    setCart(cartLs);
-    SetWishlist(wishLs);
+  const cartRedux = useSelector(state => state.cart.cart);
+  const wishlistRedux = useSelector(state => state.wishlist.wishlist);
+  const wishlistTitle = id => {
+    let isItemInWishlist = wishlistRedux?.filter((item, i) => item.id == id);
+    return isItemInWishlist.length > 0 ? true : false;
   };
-
+  wishlistTitle(id);
   useEffect(() => {
-    asyncFun();
-  }, [wishlist]);
+    // setCart(cartRedux)
+    // SetWishlist(wishlistRedux)
+    // wishlistTitle(id);
+  }, []);
 
   useFocusEffect(
     React.useCallback(() => {
       // Do something when the screen is focused
-      asyncFun();
+      //asyncFun();
       return () => {
         // Do something when the screen is unfocused
         // Useful for cleanup functions
@@ -45,7 +50,7 @@ export function ProductScreen({route, navigation}) {
       };
     }, [navigation]),
   );
-
+  const [loadRedux, setLoadRedux] = useState();
   const productDetails = useContext(ProductsDetailsContext);
   const [newImage, setNewImage] = useState(0);
   const [itemSchema, setItemSchema] = useState({
@@ -59,10 +64,10 @@ export function ProductScreen({route, navigation}) {
   getProductDetail = getProductDetail[0];
 
   const quantity = ['1', '2', '3', '4'];
-  const [cart, setCart] = useState([]) || [];
+  const [cart, setCart] = useState(cartRedux) || [];
   const [validation, setValidation] = useState(false);
-  const [wishlist, SetWishlist] = useState([]);
-  const [wishlistButton, setWishlistButton] = useState(false);
+  const [wishlist, SetWishlist] = useState(wishlistRedux);
+  const [wishlistButton, setWishlistButton] = useState(wishlistTitle(id));
   const [message, setMessage] = useState({
     itemExist: false,
     cartButton: false,
@@ -78,11 +83,11 @@ export function ProductScreen({route, navigation}) {
 
     if (cart == null) {
       setCart([itemSchema]);
-      await set('cartItem', [itemSchema]);
+      dispatch(addItem(itemSchema));
       setMessage({cartButton: true});
       return;
     }
-    let checkForExisting = cart?.filter(
+    let checkForExisting = cartRedux?.filter(
       (res, i) => (res.id == itemSchema.id) & (itemSchema.size == res.size),
     );
 
@@ -93,23 +98,16 @@ export function ProductScreen({route, navigation}) {
       }, 8000);
       return;
     }
-    cart.push(itemSchema);
-    // setCart([...cart,itemSchema]);
-    await set('cartItem', cart);
+    dispatch(addItem(itemSchema));
+    setLoadRedux(true);
     setMessage({cartButton: true});
   };
 
   const moveToWishlist = async (id, size) => {
     let wishlistItem = {id: id, size: size};
-    wishlist.push(wishlistItem);
-    await set('wishlist', wishlist);
-    wishlistTitle(id);
+    dispatch(addToWishlist(wishlistItem));
+    setLoadRedux(true);
     setWishlistButton(true);
-  };
-
-  const wishlistTitle = id => {
-    let isItemInWishlist = wishlist?.filter((item, i) => item.id == id);
-    return isItemInWishlist.length > 0 ? true : false;
   };
 
   return getProductDetail ? (
@@ -140,6 +138,7 @@ export function ProductScreen({route, navigation}) {
           </View>
         </View>
         <View style={{marginTop: 20}}>
+        <Text h4>{getProductDetail.name}</Text>
           <Text>{getProductDetail.description}</Text>
           <View style={styles.priceContainer}>
             <Text h4>
@@ -241,7 +240,7 @@ export function ProductScreen({route, navigation}) {
               />
               <Button
                 icon={
-                  wishlistTitle(getProductDetail.id) ? (
+                  wishlistTitle(getProductDetail.id) || wishlistButton ? (
                     <Icon
                       name="sentiment-very-satisfied"
                       size={24}
@@ -259,18 +258,18 @@ export function ProductScreen({route, navigation}) {
                 }
                 type="outline"
                 onPress={
-                  !wishlistTitle(getProductDetail.id)
-                    ? () =>
+                  wishlistTitle(getProductDetail.id) || wishlistButton
+                    ? () => navigation.navigate('Wishlist')
+                    : () =>
                         moveToWishlist(
                           id,
                           !itemSchema.size
                             ? getProductDetail.sizes[0]
                             : itemSchema.size,
                         )
-                    : () => navigation.navigate('Wishlist')
                 }
                 title={
-                  wishlistTitle(getProductDetail.id) && wishlistButton
+                  wishlistTitle(getProductDetail.id) || wishlistButton
                     ? 'Wishlisted'
                     : 'Add to wishlist'
                 }
