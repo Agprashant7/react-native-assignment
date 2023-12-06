@@ -8,7 +8,6 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Input, Button} from '@rneui/themed';
 import {ProductsDetailsContext} from '../../App';
-import {get, remove, set} from '../../utils/localStorage';
 import {useFocusEffect} from '@react-navigation/native';
 import AlertBanner from '../alertBanner';
 import {useDispatch, useSelector} from 'react-redux';
@@ -141,7 +140,7 @@ export function ProductScreen({route, navigation}) {
         <Text h4>{getProductDetail.name}</Text>
           <Text>{getProductDetail.description}</Text>
           <View style={styles.priceContainer}>
-            <Text h4>
+            <Text h4 style={{color:COLORS.secondary}}>
               &#8377;{getProductDetail.price}{' '}
               <Text style={{textDecorationLine: 'line-through', fontSize: 14}}>
                 {' '}
@@ -191,12 +190,15 @@ export function ProductScreen({route, navigation}) {
                         isOpened ? 'keyboard-arrow-up' : 'keyboard-arrow-down'
                       }
                       size={20}
-                      color={'#000'}
+                      color={COLORS.secondary}
                     />
                   );
                 }}
+                buttonTextStyle={{color:COLORS.secondary}}
                 buttonStyle={styles.buttonStyle}
-                dropdownStyle={{width: '20%'}}
+                dropdownStyle={{width: '20%',}}
+                
+                
                 data={quantity}
               />
             </View>
@@ -236,6 +238,12 @@ export function ProductScreen({route, navigation}) {
                     : addToCart
                 }
                 type="solid"
+                icon={   <Icon2
+                  name={message.cartButton ?'cart':"cart-plus"}
+                  size={24}
+                  style={{marginRight: 4}}
+                  color={COLORS.fontColor}
+                />}
                 title={message.cartButton ? 'Go to cart' : 'Add to cart'}
               />
               <Button
@@ -302,7 +310,7 @@ export function ProductScreen({route, navigation}) {
 const styles = StyleSheet.create({
   containerStyle: {
     backgroundColor: COLORS.backgroundColor,
-    paddingHorizontal: 20,
+    paddingHorizontal: 10,
     paddingTop: 10,
   },
   flexContainer: {
@@ -327,7 +335,8 @@ const styles = StyleSheet.create({
     width: '18%',
     height: 50,
     backgroundColor: COLORS.primary,
-    borderColor: '#000',
-    borderWidth: 0.5,
+    borderColor:COLORS.secondary,
+    borderWidth: 1,
+    
   },
 });

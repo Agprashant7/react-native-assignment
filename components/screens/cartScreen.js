@@ -1,47 +1,29 @@
 import {Image} from '@rneui/base';
 import {Input, Text, Button} from '@rneui/themed';
 import React, {useEffect, useLayoutEffect, useState} from 'react';
-import {
-  StyleSheet,
-  View,
-} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import {COLORS} from '../../utils/theme';
-import {get, remove, set} from '../../utils/localStorage';
 import GetProductDetailById from '../../utils/getProductDetailById';
 import {discountedPrice} from './productScreen';
 import Placeholder from '../placeholder';
-import {useFocusEffect} from '@react-navigation/native';
-import { useSelector, useDispatch } from "react-redux";
-import {
-  addToWishlist,
-  removeItem,
-  setCartAmount,
-} from "../../actions";
-const CartScreen =  ({route, navigation}) => {
-  useEffect(() => {
-   // asyncFun();
-    // remove('cartItem')
-  }, []);
-
+import {useIsFocused} from '@react-navigation/native';
+import {useSelector, useDispatch} from 'react-redux';
+import NumericInput from 'react-native-numeric-input';
+import {addItem, addToWishlist, removeItem, setCartAmount} from '../../actions';
+const CartScreen = ({route, navigation}) => {
+  const isFocused = useIsFocused();
   const dispatch = useDispatch();
-  const cartRedux = useSelector((state) => state.cart.cart);
-  const wishlistRedux = useSelector((state) => state.wishlist.wishlist);
-  // console.log('!!!!CART REDUX!!!!', cartRedux);
-  // console.log('!!!!WISHLIST REDUX!!!!', wishlistRedux);
-  const [cartItem, setCartItem] = useState(cartRedux)
-  const [wishlist, SetWishlist] = useState(wishlistRedux) 
-  const [amountDetails, setAmountDetails] = useState({
-    totalMrp: '',
-    totalDiscount: '',
-    gst: '',
-    amountToPay: '',
-  });
-  useFocusEffect(
-    React.useCallback(() => {
-      setCartItem(cartRedux)
-    }, [cartRedux]),
-  );
+  const cartRedux = useSelector(state => state.cart.cart);
+  const wishlistRedux = useSelector(state => state.wishlist.wishlist);
+  useEffect(() => {
+    if (isFocused) {
+      setCartItem(cartRedux);
+    }
+  }, [isFocused]);
+
+  const [cartItem, setCartItem] = useState(cartRedux);
+  const [wishlist, SetWishlist] = useState(wishlistRedux);
   let cartArrMrp = cartItem?.map((item, i) => {
     let mrp = GetProductDetailById(item.id).mrp;
     let price = GetProductDetailById(item.id).price;
@@ -55,27 +37,32 @@ const CartScreen =  ({route, navigation}) => {
     currentValue,
   ) {
     return (
-      previousValue + currentValue.qty * currentValue.mrp - currentValue.price
+      previousValue + currentValue.qty * (currentValue.mrp - currentValue.price)
     );
   },
   0);
   let gst = (totalMrp * 5) / 100;
   let amountToPay = totalMrp - totalDiscount + gst;
-   //set('total', amountToPay);
-
+  const updateQuantity = (newValue, id, size) => {
+    let concat = `${id}${size}`;
+    let obj = cartItem.filter((res, i) => res.id + res.size === concat);
+    obj[0].quantity = newValue;
+    dispatch(removeItem(concat));
+    dispatch(addItem(obj[0]));
+  };
 
   const moveToWishlist = async (id, size) => {
     let wishlistItem = {id: id, size: size};
 
     let checkIfItemExist = wishlist?.filter((res, i) => res.id === id);
-    if (checkIfItemExist.length>0) {
+    if (checkIfItemExist.length > 0) {
       removeFromCart(id, size);
       return;
     }
-    if(wishlist===null){
+    if (wishlist === null) {
       dispatch(addToWishlist(wishlistItem));
       removeFromCart(id, size);
-      return
+      return;
     }
     dispatch(addToWishlist(wishlistItem));
     // remove from cart
@@ -85,8 +72,6 @@ const CartScreen =  ({route, navigation}) => {
     let concat = `${id}${size}`;
     const filterCart = cartItem.filter((res, i) => res.id + res.size != concat);
     setCartItem(filterCart);
-
-    // await set('cartItem', filterCart);
     dispatch(removeItem(concat));
   };
 
@@ -112,7 +97,10 @@ const CartScreen =  ({route, navigation}) => {
                 {GetProductDetailById(cart.id).name}
               </Text>
               <View style={styles.cardPrice}>
-                <Text> &#8377;{GetProductDetailById(cart.id).price}</Text>
+                <Text style={{color: COLORS.secondary, fontSize: 18}}>
+                  {' '}
+                  &#8377;{GetProductDetailById(cart.id).price}
+                </Text>
                 <Text style={{textDecorationLine: 'line-through'}}>
                   {GetProductDetailById(cart.id).mrp}
                 </Text>
@@ -126,7 +114,20 @@ const CartScreen =  ({route, navigation}) => {
               </View>
               <View style={{marginLeft: 5}}>
                 <Text>Size:{cart.size}</Text>
-                <Text>Quantity:{cart.quantity}</Text>
+                <Text>Quantity:</Text>
+                <View style={{marginTop: 5}}>
+                  <NumericInput
+                    rounded
+                    value={cart.quantity}
+                    minValue={1}
+                    maxValue={9}
+                    rightButtonBackgroundColor={COLORS.secondary}
+                    totalWidth={70}
+                    onChange={(e, v) => {
+                      updateQuantity(e, cartId, idSize);
+                    }}
+                  />
+                </View>
               </View>
 
               <View
@@ -149,22 +150,24 @@ const CartScreen =  ({route, navigation}) => {
       {/* {
         cartItem?<>  */}
       <View style={styles.amountDetails}>
-        <View  style={{gap:5,marginTop:15}}>
+        <View style={{gap: 5, marginTop: 15}}>
           <Text>Cart Total</Text>
           <Text>Discount</Text>
           <Text>GST</Text>
           <Text>Amount To Pay</Text>
         </View>
-        <View style={{gap:5,marginTop:15}}>
+        <View style={{gap: 5, marginTop: 15}}>
           <Text>&#8377;{totalMrp}</Text>
           <Text>- &#8377;{totalDiscount}</Text>
           <Text>+&#8377;{gst}</Text>
-          <Text>&#8377;{amountToPay}</Text>
+          <Text style={{color: COLORS.secondary, fontSize: 20}}>
+            &#8377;{amountToPay}
+          </Text>
         </View>
       </View>
       <View style={styles.checkout}>
         <Button
-          onPress={() => navigation.navigate('Checkout',{total:amountToPay})}
+          onPress={() => navigation.navigate('Checkout', {total: amountToPay})}
           title={'Check out'}
         />
       </View>
@@ -203,7 +206,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: 150,
-    height: 150,
+    height: 180,
     borderRadius: 8,
     //marginBottom: 20,
     //flex: 2,
@@ -218,7 +221,7 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   amountDetails: {
-    marginTop:10,
+    marginTop: 10,
     width: '90%',
     height: 150,
     elevation: 5,

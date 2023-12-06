@@ -1,8 +1,9 @@
 import React from 'react';
-import {Tab, Text, Card, Button, Icon, TabView} from '@rneui/themed';
+import {Tab, Text} from '@rneui/themed';
 import {COLORS} from '../../utils/theme';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {ScrollView} from 'react-native';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import ItemCard from '../itemCard';
 
 const Tabs = ({value, onChange, tabHead, tabData,onClick,onClickMore}) => {
@@ -12,7 +13,7 @@ const Tabs = ({value, onChange, tabHead, tabData,onClick,onClickMore}) => {
     } else if (value == 'Men') {
       return 'man';
     } else if (value == 'Kids') {
-      return 'tag-faces';
+      return 'walk';
     }
   };
   return (
@@ -33,11 +34,7 @@ const Tabs = ({value, onChange, tabHead, tabData,onClick,onClickMore}) => {
               key={i}
               title={res.title}
               titleStyle={{fontSize: 12}}
-              icon={{
-                name: icon(res.title),
-                type: 'materialicons',
-                color: 'white',
-              }}
+              icon={<Ionicons name={icon(res.title)} size={20} color={COLORS.fontColor} />}
             />
           );
         })}

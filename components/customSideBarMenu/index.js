@@ -35,7 +35,7 @@ const CustomSidebarMenu = ({props, navigation}) => {
     },
     {
       leftIcon: (
-        <Ionicons name="footsteps" size={22} color={COLORS.fontColor} />
+        <Ionicons name="add-circle" size={22} color={COLORS.fontColor} />
       ),
       name: 'Shoes',
     },
