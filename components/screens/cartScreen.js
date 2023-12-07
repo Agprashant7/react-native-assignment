@@ -92,8 +92,8 @@ const CartScreen = ({route, navigation}) => {
                 }}
               />
             </View>
-            <View style={{marginLeft: 5, display: 'flex', flexwrap: 'wrap'}}>
-              <Text style={[styles.title]}>
+            <View style={{marginLeft: 5, display: 'flex',flexShrink:1}}>
+              <Text numberOfLines={2} style={[styles.title]}>
                 {GetProductDetailById(cart.id).name}
               </Text>
               <View style={styles.cardPrice}>
@@ -186,6 +186,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.backgroundColor,
   },
   item: {
+    overflow:'visible',
     marginVertical: 8,
     marginHorizontal: 16,
     flexDirection: 'row',

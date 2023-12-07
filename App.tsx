@@ -28,7 +28,7 @@ function AppDrawerStack() {
         drawerContent={props => <CustomSidebarMenu {...props} />}>
         <Drawer.Screen name="Demo App" component={MainScreen} />
         <Drawer.Screen name="Section" component={SectionScreen} />
-        <Drawer.Screen  name="Product" component={ProductScreen} />
+        {/* <Drawer.Screen  name="Product" component={ProductScreen} /> */}
       </Drawer.Navigator>
   
   );
@@ -48,7 +48,7 @@ export default function App() {
           
           }}>
           <Stack.Screen name="AppDrawerStack" component={AppDrawerStack} />
-   
+          <Stack.Screen name="Product" component={ProductScreen} />
           <Stack.Screen  name="Checkout" component={CheckoutScreen} />
         </Stack.Navigator>
       </NavigationContainer>

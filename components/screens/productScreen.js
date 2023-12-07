@@ -1,6 +1,6 @@
 import {StyleSheet, View} from 'react-native';
 import {COLORS} from '../../utils/theme';
-import {Image, Text, Chip, Tile, Overlay} from '@rneui/themed';
+import {Image, Text, Chip, Overlay} from '@rneui/themed';
 import {ScrollView} from 'react-native-gesture-handler';
 import SelectDropdown from 'react-native-select-dropdown';
 import React, {useContext, useEffect, useState} from 'react';
@@ -12,6 +12,7 @@ import {useFocusEffect} from '@react-navigation/native';
 import AlertBanner from '../alertBanner';
 import {useDispatch, useSelector} from 'react-redux';
 import {addItem, addToWishlist} from '../../actions';
+import Swiper from 'react-native-swiper';
 
 export const discountedPrice = (mrp, price) => {
   let calculate = mrp - price;
@@ -40,6 +41,7 @@ export function ProductScreen({route, navigation}) {
     React.useCallback(() => {
       // Do something when the screen is focused
       //asyncFun();
+      setItemSchema({size: '', quantity: 1, id: id});
       return () => {
         // Do something when the screen is unfocused
         // Useful for cleanup functions
@@ -113,34 +115,70 @@ export function ProductScreen({route, navigation}) {
     <ScrollView style={styles.containerStyle}>
       <View style={{flex: 2}}>
         <View style={{flex: 3}}>
-          <Image
-            containerStyle={{width: '100%', height: 300}}
-            resizeMode="stretch"
-            source={{
-              uri: getProductDetail.image[newImage],
+          <Swiper
+            index={newImage}
+            onIndexChanged={e => {
+              setNewImage(e);
             }}
-          />
-          <View style={styles.flexContainer}>
+            autoplay
+            nextButton={
+              <Icon
+                name={'keyboard-arrow-right'}
+                size={24}
+                color={COLORS.secondary}
+              />
+            }
+            prevButton={
+              <Icon
+                name={'keyboard-arrow-left'}
+                size={24}
+                color={COLORS.secondary}
+              />
+            }
+            activeDotColor={COLORS.secondary}
+            style={styles.wrapper}
+            showsButtons={true}>
             {getProductDetail.image.map((img, i) => {
               return (
                 <Image
                   key={i}
                   onPress={() => setNewImage(i)}
-                  containerStyle={{width: 70, height: 80}}
+                  containerStyle={{width: '100%', height: '100%'}}
                   resizeMode="stretch"
                   source={{
-                    uri: img,
+                    uri: getProductDetail.image[newImage],
                   }}
                 />
+              );
+            })}
+          </Swiper>
+          <View style={styles.flexContainer}>
+            {getProductDetail.image.map((img, i) => {
+              return (
+                <View
+                  key={i}
+                  style={{
+                    borderColor: COLORS.secondary,
+                    borderWidth: i === newImage ? 3 : 0,
+                  }}>
+                  <Image
+                    onPress={() => setNewImage(i)}
+                    containerStyle={{width: 70, height: 80}}
+                    resizeMode="stretch"
+                    source={{
+                      uri: img,
+                    }}
+                  />
+                </View>
               );
             })}
           </View>
         </View>
         <View style={{marginTop: 20}}>
-        <Text h4>{getProductDetail.name}</Text>
+          <Text h4>{getProductDetail.name}</Text>
           <Text>{getProductDetail.description}</Text>
           <View style={styles.priceContainer}>
-            <Text h4 style={{color:COLORS.secondary}}>
+            <Text h4 style={{color: COLORS.secondary}}>
               &#8377;{getProductDetail.price}{' '}
               <Text style={{textDecorationLine: 'line-through', fontSize: 14}}>
                 {' '}
@@ -182,6 +220,7 @@ export function ProductScreen({route, navigation}) {
             <View style={{marginBottom: 10, height: 'auto'}}>
               <Text style={{color: COLORS.fontColor}}>Quantity</Text>
               <SelectDropdown
+                onSelect={e => setItemSchema({...itemSchema, quantity: e})}
                 defaultButtonText={'1'}
                 renderDropdownIcon={isOpened => {
                   return (
@@ -194,11 +233,10 @@ export function ProductScreen({route, navigation}) {
                     />
                   );
                 }}
-                buttonTextStyle={{color:COLORS.secondary}}
+                defaultValue={itemSchema.quantity}
+                buttonTextStyle={{color: COLORS.secondary}}
                 buttonStyle={styles.buttonStyle}
-                dropdownStyle={{width: '20%',}}
-                
-                
+                dropdownStyle={{width: '20%'}}
                 data={quantity}
               />
             </View>
@@ -238,12 +276,14 @@ export function ProductScreen({route, navigation}) {
                     : addToCart
                 }
                 type="solid"
-                icon={   <Icon2
-                  name={message.cartButton ?'cart':"cart-plus"}
-                  size={24}
-                  style={{marginRight: 4}}
-                  color={COLORS.fontColor}
-                />}
+                icon={
+                  <Icon2
+                    name={message.cartButton ? 'cart' : 'cart-plus'}
+                    size={24}
+                    style={{marginRight: 4}}
+                    color={COLORS.fontColor}
+                  />
+                }
                 title={message.cartButton ? 'Go to cart' : 'Add to cart'}
               />
               <Button
@@ -313,6 +353,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingTop: 10,
   },
+  wrapper: {
+    height: 400,
+    backgroundColor: 'red',
+  },
   flexContainer: {
     marginTop: 20,
     display: 'flex',
@@ -335,8 +379,7 @@ const styles = StyleSheet.create({
     width: '18%',
     height: 50,
     backgroundColor: COLORS.primary,
-    borderColor:COLORS.secondary,
+    borderColor: COLORS.secondary,
     borderWidth: 1,
-    
   },
 });
