@@ -73,7 +73,7 @@ const WishlistScreen = ({route, navigation}) => {
       })}
     </ScrollView>
   ) : (
-    <Placeholder />
+    <Placeholder navigation={navigation} />
   );
 };
 

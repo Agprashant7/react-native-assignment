@@ -121,7 +121,7 @@ const CartScreen = ({route, navigation}) => {
                     value={cart.quantity}
                     minValue={1}
                     maxValue={9}
-                    rightButtonBackgroundColor={COLORS.secondary}
+                    // rightButtonBackgroundColor={COLORS.secondary}
                     totalWidth={70}
                     onChange={(e, v) => {
                       updateQuantity(e, cartId, idSize);
@@ -176,7 +176,7 @@ const CartScreen = ({route, navigation}) => {
       */}
     </ScrollView>
   ) : (
-    <Placeholder />
+    <Placeholder navigation={navigation} />
   );
 };
 export default CartScreen;

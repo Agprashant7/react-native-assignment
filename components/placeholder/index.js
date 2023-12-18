@@ -1,18 +1,20 @@
 import { Text } from "@rneui/themed";
 import React from "react";
-import { View } from "react-native";
+import { Pressable, View } from "react-native";
 import { COLORS } from "../../utils/theme";
 
-const Placeholder=()=>{
+const Placeholder=({navigation})=>{
     return(
-        <View
+        <Pressable
+        onPress={()=>navigation.navigate('Home')}
       style={{
         flex: 1,
         alignItems: 'center',
+        justifyContent:'center',
         backgroundColor: COLORS.backgroundColor,
       }}>
-      <Text h4>No Items</Text>
-    </View>
+      <Text style={{color:COLORS.secondary}} h4>Add Items</Text>
+    </Pressable>
     )
 }
 
